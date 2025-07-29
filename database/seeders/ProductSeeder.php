@@ -79,6 +79,29 @@ class ProductSeeder extends Seeder
                 ['category_id' => $astinet->category_id, 'nama_product' => 'ASTINET 1:4 - (80 Mbps)', 'price' => 3975000],
                 ['category_id' => $astinet->category_id, 'nama_product' => 'ASTINET 1:4 - (90 Mbps)', 'price' => 4209000],
                 ['category_id' => $astinet->category_id, 'nama_product' => 'ASTINET 1:4 - (100 Mbps)', 'price' => 4405000],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'IP TRANSIT MIX - (100 Mbps)', 'price' => 6493000],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'IP TRANSIT MIX - (150 Mbps)', 'price' => 9173500],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'IP TRANSIT MIX - (200 Mbps)', 'price' => 11854000],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'IP TRANSIT MIX - (250 Mbps)', 'price' => 13870000],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'IP TRANSIT MIX - (300 Mbps)', 'price' => 15886000],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'IP TRANSIT MIX - (350 Mbps)', 'price' => 17902000],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'IP TRANSIT MIX - (400 Mbps)', 'price' => 19918000],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'IP TRANSIT MIX - (450 Mbps)', 'price' => 21934000],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'IP TRANSIT MIX - (500 Mbps)', 'price' => 23950000],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'IP TRANSIT MIX - (550 Mbps)', 'price' => 25961500],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'IP TRANSIT MIX - (600 Mbps)', 'price' => 27973000],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'IP TRANSIT MIX - (650 Mbps)', 'price' => 29337500],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'IP TRANSIT MIX - (700 Mbps)', 'price' => 30702000],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'IP TRANSIT MIX - (750 Mbps)', 'price' => 31826000],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'IP TRANSIT MIX - (800 Mbps)', 'price' => 32950000],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'IP TRANSIT MIX - (850 Mbps)', 'price' => 33841000],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'IP TRANSIT MIX - (900 Mbps)', 'price' => 34732000],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'IP TRANSIT MIX - (950 Mbps)', 'price' => 35407500],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'IP TRANSIT MIX - (1000 Mbps)', 'price' => 36083000],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'IP TRANSIT MIX - (2000 Mbps)', 'price' => 70158000],
+
+
+                
 
 
         ];
