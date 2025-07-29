@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kalkulator Non-Pots</title>
+
+
+    <title>Kalkulator Non-pots</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -78,7 +80,8 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-telkom">
         <div class="container">
             <a class="navbar-brand fw-bold" href="{{ route('calculator.index') }}">
-                <i class="fas fa-calculator"></i> Kalkulator Non-Pots
+
+                <i class="fas fa-calculator"></i> Kalkulator Non-post
             </a>
             {{-- 
             <div class="navbar-nav ms-auto">
@@ -96,7 +99,7 @@
     </main>
     <footer class="bg-dark text-white text-center py-3 mt-5">
         <div class="container">
-            <p class="mb-0">&copy; {{ date('Y') }} Kalkulator Indibiz. All rights reserved.</p>
+            <p class="mb-0">&copy; {{ date('Y') }} Kalkulator Non-post. All rights reserved.</p>
         </div>
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
