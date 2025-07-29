@@ -8,13 +8,13 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
-            --navy-primary: #1e3a8a;
-            --navy-dark: #1e40af;
-            --navy-light: #3b82f6;
+            --telkom-primary: #e60000;
+            --telkom-dark: #cc0000;
+            --telkom-light: #ff4d4d;
         }
 
         .table th {
-            background-color: var(--navy-primary);
+            background-color: var(--telkom-primary);
             color: white;
             text-align: center;
             font-size: 0.9rem;
@@ -43,25 +43,31 @@
         .navbar-brand {
             font-size: 1.5rem;
         }
-        .bg-navy {
-            background-color: var(--navy-primary) !important;
+
+        .bg-telkom {
+            background-color: var(--telkom-primary) !important;
         }
-        .btn-navy {
-            background-color: var(--navy-primary);
-            border-color: var(--navy-primary);
+
+        .btn-telkom {
+            background-color: var(--telkom-primary);
+            border-color: var(--telkom-primary);
             color: white;
         }
-        .btn-navy:hover {
-            background-color: var(--navy-dark);
-            border-color: var(--navy-dark);
+
+        .btn-telkom:hover {
+            background-color: var(--telkom-dark);
+            border-color: var(--telkom-dark);
             color: white;
         }
-        .text-navy {
-            color: var(--navy-primary) !important;
+
+        .text-telkom {
+            color: var(--telkom-primary) !important;
         }
-        .border-navy {
-            border-color: var(--navy-primary) !important;
+
+        .border-telkom {
+            border-color: var(--telkom-primary) !important;
         }
+
         .navbar-nav .nav-link:hover {
             background-color: rgba(255, 255, 255, 0.1);
             border-radius: 4px;
@@ -69,7 +75,7 @@
     </style>
 </head>
 <body class="bg-light">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-navy">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-telkom">
         <div class="container">
             <a class="navbar-brand fw-bold" href="{{ route('calculator.index') }}">
                 <i class="fas fa-calculator"></i> Kalkulator Indibiz
