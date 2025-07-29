@@ -81,7 +81,7 @@
         <div class="container">
             <a class="navbar-brand fw-bold" href="{{ route('calculator.index') }}">
 
-                <i class="fas fa-calculator"></i> Kalkulator Non-post
+                <i class="fas fa-calculator"></i> Kalkulator Non-pots
             </a>
             {{-- 
             <div class="navbar-nav ms-auto">
@@ -99,7 +99,7 @@
     </main>
     <footer class="bg-dark text-white text-center py-3 mt-5">
         <div class="container">
-            <p class="mb-0">&copy; {{ date('Y') }} Kalkulator Non-post. All rights reserved.</p>
+            <p class="mb-0">&copy; {{ date('Y') }} Kalkulator Non-pots. All rights reserved.</p>
         </div>
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

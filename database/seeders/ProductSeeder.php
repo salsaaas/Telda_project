@@ -13,312 +13,45 @@ class ProductSeeder extends Seeder
      */
     public function run(): void
     {
-        $indibiz = Category::where('nama_category', 'INDIBIZ')->first();
-        if (!$indibiz) {
-            $indibiz = Category::create(['nama_category' => 'INDIBIZ']);
+        $astinet = Category::where('nama_category', 'ASTINET')->first();
+        if (!$astinet) {
+            $astinet = Category::create(['nama_category' => 'ASTINET']);
         }
 
         $products = [
-            [
-                'category_id' => $indibiz->category_id,
-                'nama_product' => '1S - INET ONLY (50 Mbps)',
-                'price' => 439000
-            ],
-            [
-                'category_id' => $indibiz->category_id,
-                'nama_product' => '1S - INET ONLY (75 Mbps)',
-                'price' => 519000
-            ],
-            [
-                'category_id' => $indibiz->category_id,
-                'nama_product' => '1S - INET ONLY (100 Mbps)',
-                'price' => 669000
-            ],
-            [
-                'category_id' => $indibiz->category_id,
-                'nama_product' => '1S - INET ONLY (150 Mbps)',
-                'price' => 819000
-            ],
-            [
-                'category_id' => $indibiz->category_id,
-                'nama_product' => '1S - INET ONLY (200 Mbps)',
-                'price' => 1049000
-            ],
-            [
-                'category_id' => $indibiz->category_id,
-                'nama_product' => '1S - INET ONLY (300 Mbps)',
-                'price' => 1499000
-            ],
-            [
-                'category_id' => $indibiz->category_id,
-                'nama_product' => '2S - INET + VOICE (50 Mbps)',
-                'price' => 479000
-            ],
-            [
-                'category_id' => $indibiz->category_id,
-                'nama_product' => '2S - INET + VOICE (75 Mbps)',
-                'price' => 559000
-            ],
-            [
-                'category_id' => $indibiz->category_id,
-                'nama_product' => '2S - INET + VOICE (100 Mbps)',
-                'price' => 709000
-            ],
-            [
-                'category_id' => $indibiz->category_id,
-                'nama_product' => '2S - INET + VOICE (150 Mbps)',
-                'price' => 859000
-            ],
-            [
-                'category_id' => $indibiz->category_id,
-                'nama_product' => '2S - INET + VOICE (200 Mbps)',
-                'price' => 1089000
-            ],
-            [
-                'category_id' => $indibiz->category_id,
-                'nama_product' => '2S - INET + VOICE (300 Mbps)',
-                'price' => 1539000
-            ],
-            [
-                'category_id' => $indibiz->category_id,
-                'nama_product' => '2S - INET + IPTV (50 Mbps)',
-                'price' => 639000
-            ],
-            [
-                'category_id' => $indibiz->category_id,
-                'nama_product' => '2S - INET + IPTV (75 Mbps)',
-                'price' => 719000
-            ],
-            [
-                'category_id' => $indibiz->category_id,
-                'nama_product' => '2S - INET + IPTV (100 Mbps)',
-                'price' => 869000
-            ],
-            [
-                'category_id' => $indibiz->category_id,
-                'nama_product' => '2S - INET + IPTV (150 Mbps)',
-                'price' => 1019000
-            ],
-            [
-                'category_id' => $indibiz->category_id,
-                'nama_product' => '2S - INET + IPTV (200 Mbps)',
-                'price' => 1249000
-            ],
-            [
-                'category_id' => $indibiz->category_id,
-                'nama_product' => '2S - INET + IPTV (300 Mbps)',
-                'price' => 1699000
-            ],
-            [
-                'category_id' => $indibiz->category_id,
-                'nama_product' => '2S - INET + NETMONK (50 Mbps)',
-                'price' => 465000
-            ],
-            [
-                'category_id' => $indibiz->category_id,
-                'nama_product' => '2S - INET + NETMONK (75 Mbps)',
-                'price' => 545000
-            ],
-            [
-                'category_id' => $indibiz->category_id,
-                'nama_product' => '2S - INET + NETMONK (100 Mbps)',
-                'price' => 695000
-            ],
-            [
-                'category_id' => $indibiz->category_id,
-                'nama_product' => '2S - INET + NETMONK (150 Mbps)',
-                'price' => 845000
-            ],
-            [
-                'category_id' => $indibiz->category_id,
-                'nama_product' => '2S - INET + NETMONK (200 Mbps)',
-                'price' => 1075000
-            ],
-            [
-                'category_id' => $indibiz->category_id,
-                'nama_product' => '2S - INET + NETMONK (300 Mbps)',
-                'price' => 1559000
-            ],
-            [
-                'category_id' => $indibiz->category_id,
-                'nama_product' => '2S - INET + OCA (50 Mbps)',
-                'price' => 543000
-            ],
-            [
-                'category_id' => $indibiz->category_id,
-                'nama_product' => '2S - INET + OCA (75 Mbps)',
-                'price' => 623000
-            ],
-            [
-                'category_id' => $indibiz->category_id,
-                'nama_product' => '2S - INET + OCA (100 Mbps)',
-                'price' => 773000
-            ],
-            [
-                'category_id' => $indibiz->category_id,
-                'nama_product' => '2S - INET + OCA (150 Mbps)',
-                'price' => 923000
-            ],
-            [
-                'category_id' => $indibiz->category_id,
-                'nama_product' => '2S - INET + OCA (200 Mbps)',
-                'price' => 1153000
-            ],
-            [
-                'category_id' => $indibiz->category_id,
-                'nama_product' => '2S - INET + OCA (300 Mbps)',
-                'price' => 1603000
-            ],
-            [
-                'category_id' => $indibiz->category_id,
-                'nama_product' => '2S - INET + PIJAR (50 Mbps)',
-                'price' => 1022000
-            ],
-            [
-                'category_id' => $indibiz->category_id,
-                'nama_product' => '2S - INET + PIJAR (75 Mbps)',
-                'price' => 1102000
-            ],
-            [
-                'category_id' => $indibiz->category_id,
-                'nama_product' => '2S - INET + PIJAR (100 Mbps)',
-                'price' => 1252000
-            ],
-            [
-                'category_id' => $indibiz->category_id,
-                'nama_product' => '2S - INET + PIJAR (150 Mbps)',
-                'price' => 1402000
-            ],
-            [
-                'category_id' => $indibiz->category_id,
-                'nama_product' => '2S - INET + PIJAR (200 Mbps)',
-                'price' => 1632000
-            ],
-            [
-                'category_id' => $indibiz->category_id,
-                'nama_product' => '2S - INET + PIJAR (300 Mbps)',
-                'price' => 2082000
-            ],
-            [
-                'category_id' => $indibiz->category_id,
-                'nama_product' => '3S - INET + TELP & IPTV (50 Mbps)',
-                'price' => 664000
-            ],
-            [
-                'category_id' => $indibiz->category_id,
-                'nama_product' => '3S - INET + TELP & IPTV (75 Mbps)',
-                'price' => 744000
-            ],
-            [
-                'category_id' => $indibiz->category_id,
-                'nama_product' => '3S - INET + TELP & IPTV (100 Mbps)',
-                'price' => 894000
-            ],
-            [
-                'category_id' => $indibiz->category_id,
-                'nama_product' => '3S - INET + TELP & IPTV (150 Mbps)',
-                'price' => 1044000
-            ],
-            [
-                'category_id' => $indibiz->category_id,
-                'nama_product' => '3S - INET + TELP & IPTV (200 Mbps)',
-                'price' => 1274000
-            ],
-            [
-                'category_id' => $indibiz->category_id,
-                'nama_product' => '3S - INET + TELP & IPTV (300 Mbps)',
-                'price' => 1724000
-            ],
-            [
-                'category_id' => $indibiz->category_id,
-                'nama_product' => '3S - INET + VOICE & NETMONK (50 Mbps)',
-                'price' => 506000
-            ],
-            [
-                'category_id' => $indibiz->category_id,
-                'nama_product' => '3S - INET + VOICE & NETMONK (75 Mbps)',
-                'price' => 586000
-            ],
-            [
-                'category_id' => $indibiz->category_id,
-                'nama_product' => '3S - INET + VOICE & NETMONK (100 Mbps)',
-                'price' => 736000
-            ],
-            [
-                'category_id' => $indibiz->category_id,
-                'nama_product' => '3S - INET + VOICE & NETMONK (150 Mbps)',
-                'price' => 886000
-            ],
-            [
-                'category_id' => $indibiz->category_id,
-                'nama_product' => '3S - INET + VOICE & NETMONK (200 Mbps)',
-                'price' => 1116000
-            ],
-            [
-                'category_id' => $indibiz->category_id,
-                'nama_product' => '3S - INET + VOICE & NETMONK (300 Mbps)',
-                'price' => 1566000
-            ],
-            [
-                'category_id' => $indibiz->category_id,
-                'nama_product' => '3S - INET + VOICE & OCA (50 Mbps)',
-                'price' => 582950
-            ],
-            [
-                'category_id' => $indibiz->category_id,
-                'nama_product' => '3S - INET + VOICE & OCA (75 Mbps)',
-                'price' => 662950
-            ],
-            [
-                'category_id' => $indibiz->category_id,
-                'nama_product' => '3S - INET + VOICE & OCA (100 Mbps)',
-                'price' => 812950
-            ],
-            [
-                'category_id' => $indibiz->category_id,
-                'nama_product' => '3S - INET + VOICE & OCA (150 Mbps)',
-                'price' => 962950
-            ],
-            [
-                'category_id' => $indibiz->category_id,
-                'nama_product' => '3S - INET + VOICE & OCA (200 Mbps)',
-                'price' => 1192950
-            ],
-            [
-                'category_id' => $indibiz->category_id,
-                'nama_product' => '3S - INET + VOICE & OCA (300 Mbps)',
-                'price' => 1642950
-            ],
-            [
-                'category_id' => $indibiz->category_id,
-                'nama_product' => '3S - INET + VOICE & PIJAR (50 Mbps)',
-                'price' => 1034000
-            ],
-            [
-                'category_id' => $indibiz->category_id,
-                'nama_product' => '3S - INET + VOICE & PIJAR (75 Mbps)',
-                'price' => 1114000
-            ],
-            [
-                'category_id' => $indibiz->category_id,
-                'nama_product' => '3S - INET + VOICE & PIJAR (100 Mbps)',
-                'price' => 1264000
-            ],
-            [
-                'category_id' => $indibiz->category_id,
-                'nama_product' => '3S - INET + VOICE & PIJAR (150 Mbps)',
-                'price' => 1414000
-            ],
-             [
-                'category_id' => $indibiz->category_id,
-                'nama_product' => '3S - INET + VOICE & PIJAR (200 Mbps)',
-                'price' => 1644000
-            ],
-             [
-                'category_id' => $indibiz->category_id,
-                'nama_product' => '3S - INET + VOICE & PIJAR (300 Mbps)',
-                'price' => 2094000
-            ],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'ASTINET 1:1 - (1 Mbps)', 'price' => 143000],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'ASTINET 1:1 - (2 Mbps)', 'price' => 273000],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'ASTINET 1:1 - (3 Mbps)', 'price' => 394000],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'ASTINET 1:1 - (5 Mbps)', 'price' => 615000],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'ASTINET 1:1 - (10 Mbps)', 'price' => 1013000],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'ASTINET 1:1 - (20 Mbps)', 'price' => 1963000],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'ASTINET 1:1 - (30 Mbps)', 'price' => 2582000],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'ASTINET 1:1 - (40 Mbps)', 'price' => 3201000],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'ASTINET 1:1 - (50 Mbps)', 'price' => 4570000],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'ASTINET 1:1 - (60 Mbps)', 'price' => 5045000],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'ASTINET 1:1 - (70 Mbps)', 'price' => 5520000],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'ASTINET 1:1 - (80 Mbps)', 'price' => 5995000],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'ASTINET 1:1 - (90 Mbps)', 'price' => 6470000],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'ASTINET 1:1 - (100 Mbps)', 'price' => 6945000],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'ASTINET 1:1 - (150 Mbps)', 'price' => 9856000],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'ASTINET 1:1 - (200 Mbps)', 'price' => 12767000],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'ASTINET 1:1 - (250 Mbps)', 'price' => 15240833],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'ASTINET 1:1 - (300 Mbps)', 'price' => 17714666],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'ASTINET 1:1 - (350 Mbps)', 'price' => 20188500],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'ASTINET 1:1 - (400 Mbps)', 'price' => 22662333],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'ASTINET 1:1 - (450 Mbps)', 'price' => 25136000],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'ASTINET 1:1 - (500 Mbps)', 'price' => 27610000],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'ASTINET 1:1 - (550 Mbps)', 'price' => 28924100],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'ASTINET 1:1 - (600 Mbps)', 'price' => 30238200],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'ASTINET 1:1 - (650 Mbps)', 'price' => 31552300],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'ASTINET 1:1 - (700 Mbps)', 'price' => 32866400],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'ASTINET 1:1 - (750 Mbps)', 'price' => 34180500],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'ASTINET 1:1 - (800 Mbps)', 'price' => 35494600],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'ASTINET 1:1 - (850 Mbps)', 'price' => 36808700],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'ASTINET 1:1 - (900 Mbps)', 'price' => 38122800],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'ASTINET 1:1 - (950 Mbps)', 'price' => 39436900],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'ASTINET 1:1 - (1000 Mbps)', 'price' => 40751000],
+            
         ];
 
         foreach ($products as $product) {
