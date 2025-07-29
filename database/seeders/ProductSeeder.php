@@ -79,7 +79,12 @@ class ProductSeeder extends Seeder
                 ['category_id' => $astinet->category_id, 'nama_product' => 'ASTINET 1:4 - (80 Mbps)', 'price' => 3975000],
                 ['category_id' => $astinet->category_id, 'nama_product' => 'ASTINET 1:4 - (90 Mbps)', 'price' => 4209000],
                 ['category_id' => $astinet->category_id, 'nama_product' => 'ASTINET 1:4 - (100 Mbps)', 'price' => 4405000],
+
         ];
+
+        foreach ($products as $product) {
+            Product::create($product);
+        }
 
         $ip_transit = Category::where('nama_category', 'IP TRANSIT')->first();
             if (!$ip_transit) {
