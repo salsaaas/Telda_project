@@ -12,7 +12,7 @@
             --navy-dark: #1e40af;
             --navy-light: #3b82f6;
         }
-        
+
         .table th {
             background-color: var(--navy-primary);
             color: white;
@@ -74,11 +74,13 @@
             <a class="navbar-brand fw-bold" href="{{ route('calculator.index') }}">
                 <i class="fas fa-calculator"></i> Kalkulator Indibiz
             </a>
+            {{-- 
             <div class="navbar-nav ms-auto">
                 <a class="nav-link" href="{{ route('calculator.index') }}">
                     <i class="fas fa-home"></i> Beranda
                 </a>
-            </div>
+            </div> 
+            --}}
         </div>
     </nav>
     <main class="py-4">
