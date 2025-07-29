@@ -28,78 +28,105 @@
                         <tr>
                             <th>Category Product</th>
                             <th>Product Name</th>
-                            <th>OTC Category</th>
+                            <th>Skema</th>
+                            <th>Qty</th>
                             <th>Price (Rp)</th>
                             <th>OTC (Rp)</th>
-                            <th>Price + PPN (Rp)</th>
+                            <th>Discont Price</th>
+                            <th>Discont OTC</th>
+                            <th>Price x Discount</th>
+                            <th>OTC x Discount</th>
                             <th>Duration (Bulan)</th>
-                            <th>Price x Duration (Rp)</th>
-                            <th>Final Price no PPN (Rp)</th>
-                            <th>Final Price (Rp)</th>
+                            <th>OTC</th>
+                            <th>Monthly Price</th>
+                            <th>Monthly Price with PPN</th>
+                            <th>Year Price</th>
+                            <th>Final Price with PPN</th>
                             <th>Aksi</th>
+                            
                         </tr>
                     </thead>
                     <tbody id="calculatorRows">
-                        <tr class="calculator-row">
-                            <td>
-                                <select name="items[0][category_id]" class="form-select category-select" required>
-                                    <option value="">-</option>
-                                    @foreach($categories as $category)
-                                        <option value="{{ $category->category_id }}" data-name="{{ $category->nama_category }}">{{ $category->nama_category }}</option>
-                                    @endforeach
-                                </select>
-                            </td>
-                            <td>
-                                <select name="items[0][product_id]" class="form-select product-select" required>
-                                    <option value="">-</option>
-                                    @foreach($products as $product)
-                                        <option value="{{ $product->id }}" 
-                                                data-price="{{ $product->price }}" 
-                                                data-category="{{ $product->category_id }}"
-                                                data-name="{{ $product->nama_product }}">
-                                            {{ $product->nama_product }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </td>
-                            <td>
-                                <select name="items[0][otc_category]" class="form-select otc-select" required>
-                                    <option value="FREE/MO" data-price="0">FREE/MO</option>
-                                    <option value="AO DISCOUNT" data-price="150000">AO DISCOUNT</option>
-                                    <option value="AO NORMAL" data-price="500000">AO NORMAL</option>
-                                </select>
-                            </td>
-                            <td>
-                                <span class="price-display">Rp 0</span>
-                                <input type="hidden" name="items[0][price]" class="price-value" value="0">
-                            </td>
-                            <td>
-                                <span class="otc-display">Rp 0</span>
-                                <input type="hidden" name="items[0][otc]" class="otc-value" value="0">
-                            </td>
-                            <td>
-                                <span class="price-with-ppn text-primary">Rp 0</span>
-                            </td>
-                            <td>
-                                <input type="number" name="items[0][duration]" class="form-control duration-input" 
-                                       min="1" value="1" required style="width: 80px;">
-                            </td>
-                            <td>
-                                <span class="price-duration text-info">Rp 0</span>
-                            </td>
-                            <td>
-                                <span class="final-price-no-ppn text-warning">Rp 0</span>
-                            </td>
-                            <td>
-                                <span class="final-price text-success">Rp 0</span>
-                            </td>
-                            <td>
-                                <button type="button" class="btn btn-danger btn-sm remove-row">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    </tbody>
+    <tr class="calculator-row">
+        <td>
+            <select name="items[0][category_id]" class="form-select category-select" required>
+                <option value="">-</option>
+                @foreach($categories as $category)
+                    <option value="{{ $category->category_id }}" data-name="{{ $category->nama_category }}">
+                        {{ $category->nama_category }}
+                    </option>
+                @endforeach
+            </select>
+        </td>
+        <td>
+            <select name="items[0][product_id]" class="form-select product-select" required>
+                <option value="">-</option>
+                @foreach($products as $product)
+                    <option value="{{ $product->id }}" 
+                            data-price="{{ $product->price }}" 
+                            data-category="{{ $product->category_id }}"
+                            data-name="{{ $product->nama_product }}">
+                        {{ $product->nama_product }}
+                    </option>
+                @endforeach
+            </select>
+        </td>
+        <td>
+            <select name="items[0][otc_category]" class="form-select otc-select" required>
+                <option value="OTC KONTAN" data-price="0">OTC KONTAN</option>
+                <option value="AO DISCOUNT" data-price="150000">AO DISCOUNT</option>
+                <option value="AO NORMAL" data-price="500000">AO NORMAL</option>
+            </select>
+        </td>
+        <td>
+            <input type="number" name="items[0][qty]" class="form-control qty-input" value="1" min="1" required>
+        </td>
+        <td>
+            <span class="price-display">Rp 0</span>
+            <input type="hidden" name="items[0][price]" class="price-value" value="0">
+        </td>
+        <td>
+            <span class="otc-display">Rp 0</span>
+            <input type="hidden" name="items[0][otc]" class="otc-value" value="0">
+        </td>
+        <td>
+            <span class="discounted-price">Rp 0</span>
+        </td>
+        <td>
+            <span class="discounted-otc">Rp 0</span>
+        </td>
+        <td>
+            <span class="price-times-discount">Rp 0</span>
+        </td>
+        <td>
+            <span class="otc-times-discount">Rp 0</span>
+        </td>
+        <td>
+            <input type="number" name="items[0][duration]" class="form-control duration-input" min="1" value="1" required style="width: 80px;">
+        </td>
+        <td>
+            <span class="monthly-otc">Rp 0</span>
+        </td>
+        <td>
+            <span class="monthly-price">Rp 0</span>
+        </td>
+        <td>
+            <span class="monthly-price-ppn">Rp 0</span>
+        </td>
+        <td>
+            <span class="yearly-price">Rp 0</span>
+        </td>
+        <td>
+            <span class="final-price-ppn text-success">Rp 0</span>
+        </td>
+        <td>
+            <button type="button" class="btn btn-danger btn-sm remove-row">
+                <i class="fas fa-trash"></i> Hapus
+            </button>
+        </td>
+    </tr>
+</tbody>
+
                 </table>
             </div>
 
