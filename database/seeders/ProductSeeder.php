@@ -51,7 +51,36 @@ class ProductSeeder extends Seeder
                 ['category_id' => $astinet->category_id, 'nama_product' => 'ASTINET 1:1 - (900 Mbps)', 'price' => 38122800],
                 ['category_id' => $astinet->category_id, 'nama_product' => 'ASTINET 1:1 - (950 Mbps)', 'price' => 39436900],
                 ['category_id' => $astinet->category_id, 'nama_product' => 'ASTINET 1:1 - (1000 Mbps)', 'price' => 40751000],
-            
+                ['category_id' => $astinet->category_id, 'nama_product' => 'ASTINET 1:2 - (1 Mbps)', 'price' => 111000],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'ASTINET 1:2 - (2 Mbps)', 'price' => 215000],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'ASTINET 1:2 - (3 Mbps)', 'price' => 310000],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'ASTINET 1:2 - (5 Mbps)', 'price' => 473000],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'ASTINET 1:2 - (10 Mbps)', 'price' => 637000],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'ASTINET 1:2 - (20 Mbps)', 'price' => 1234000],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'ASTINET 1:2 - (30 Mbps)', 'price' => 1780000],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'ASTINET 1:2 - (40 Mbps)', 'price' => 2283000],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'ASTINET 1:2 - (50 Mbps)', 'price' => 2740000],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'ASTINET 1:2 - (60 Mbps)', 'price' => 3902000],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'ASTINET 1:2 - (70 Mbps)', 'price' => 4269000],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'ASTINET 1:2 - (80 Mbps)', 'price' => 4598000],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'ASTINET 1:2 - (90 Mbps)', 'price' => 4741000],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'ASTINET 1:2 - (100 Mbps)', 'price' => 4876000],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'ASTINET 1:4 - (1 Mbps)', 'price' => 93000],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'ASTINET 1:4 - (2 Mbps)', 'price' => 180000],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'ASTINET 1:4 - (3 Mbps)', 'price' => 260000],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'ASTINET 1:4 - (5 Mbps)', 'price' => 397000],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'ASTINET 1:4 - (10 Mbps)', 'price' => 535000],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'ASTINET 1:4 - (20 Mbps)', 'price' => 1035000],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'ASTINET 1:4 - (30 Mbps)', 'price' => 1493000],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'ASTINET 1:4 - (40 Mbps)', 'price' => 1913000],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'ASTINET 1:4 - (50 Mbps)', 'price' => 2296000],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'ASTINET 1:4 - (60 Mbps)', 'price' => 3392000],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'ASTINET 1:4 - (70 Mbps)', 'price' => 3701000],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'ASTINET 1:4 - (80 Mbps)', 'price' => 3975000],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'ASTINET 1:4 - (90 Mbps)', 'price' => 4209000],
+                ['category_id' => $astinet->category_id, 'nama_product' => 'ASTINET 1:4 - (100 Mbps)', 'price' => 4405000],
+
+
         ];
 
         foreach ($products as $product) {
