@@ -8,6 +8,7 @@ return new class extends Migration {
             $table->id('id_OTC');
             $table->string('category_OTC');
             $table->decimal('price_OTC', 12, 2);
+            $table->string('skema')->nullable();
             $table->timestamps();
         });
     }
