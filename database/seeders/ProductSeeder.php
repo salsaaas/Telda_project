@@ -13,6 +13,97 @@ class ProductSeeder extends Seeder
      */
     public function run(): void
     {
+
+        $indibiz = Category::where('nama_category', 'INDIBIZ')->first();
+        if (!$indibiz) {
+            $indibiz = Category::create(['nama_category' => 'INDIBIZ']);
+        }
+
+        $products = [
+            ['category_id' => $indibiz->category_id, 'nama_product' => 'INDIBIZ 1S - INET ONLY (50 Mbps)', 'price' => 439000],
+            ['category_id' => $indibiz->category_id, 'nama_product' => 'INDIBIZ 1S - INET ONLY (75 Mbps)', 'price' => 519000],
+            ['category_id' => $indibiz->category_id, 'nama_product' => 'INDIBIZ 1S - INET ONLY (100 Mbps)', 'price' => 669000],
+            ['category_id' => $indibiz->category_id, 'nama_product' => 'INDIBIZ 1S - INET ONLY (150 Mbps)', 'price' => 819000],
+            ['category_id' => $indibiz->category_id, 'nama_product' => 'INDIBIZ 1S - INET ONLY (200 Mbps)', 'price' => 1049000],
+            ['category_id' => $indibiz->category_id, 'nama_product' => 'INDIBIZ 1S - INET ONLY (300 Mbps)', 'price' => 1499000],
+            ['category_id' => $indibiz->category_id, 'nama_product' => 'INDIBIZ 2S - INET + VOICE (50 Mbps)', 'price' => 479000],
+            ['category_id' => $indibiz->category_id, 'nama_product' => 'INDIBIZ 2S - INET + VOICE (75 Mbps)', 'price' => 559000],
+            ['category_id' => $indibiz->category_id, 'nama_product' => 'INDIBIZ 2S - INET + VOICE (100 Mbps)', 'price' => 709000],
+            ['category_id' => $indibiz->category_id, 'nama_product' => 'INDIBIZ 2S - INET + VOICE (150 Mbps)', 'price' => 859000],
+            ['category_id' => $indibiz->category_id, 'nama_product' => 'INDIBIZ 2S - INET + VOICE (200 Mbps)', 'price' => 1089000],
+            ['category_id' => $indibiz->category_id, 'nama_product' => 'INDIBIZ 2S - INET + VOICE (300 Mbps)', 'price' => 1539000],
+            ['category_id' => $indibiz->category_id, 'nama_product' => 'INDIBIZ 2S - INET + IPTV (50 Mbps)', 'price' => 639000],
+            ['category_id' => $indibiz->category_id, 'nama_product' => 'INDIBIZ 2S - INET + IPTV (75 Mbps)', 'price' => 719000],
+            ['category_id' => $indibiz->category_id, 'nama_product' => 'INDIBIZ 2S - INET + IPTV (100 Mbps)', 'price' => 869000],
+            ['category_id' => $indibiz->category_id, 'nama_product' => 'INDIBIZ 2S - INET + IPTV (150 Mbps)', 'price' => 1019000],
+            ['category_id' => $indibiz->category_id, 'nama_product' => 'INDIBIZ 2S - INET + IPTV (200 Mbps)', 'price' => 1249000],
+            ['category_id' => $indibiz->category_id, 'nama_product' => 'INDIBIZ 2S - INET + IPTV (300 Mbps)', 'price' => 1699000],
+            ['category_id' => $indibiz->category_id, 'nama_product' => 'INDIBIZ 2S - INET + NETMONK (50 Mbps)', 'price' => 465000],
+            ['category_id' => $indibiz->category_id, 'nama_product' => 'INDIBIZ 2S - INET + NETMONK (75 Mbps)', 'price' => 545000],
+            ['category_id' => $indibiz->category_id, 'nama_product' => 'INDIBIZ 2S - INET + NETMONK (100 Mbps)', 'price' => 695000],
+            ['category_id' => $indibiz->category_id, 'nama_product' => 'INDIBIZ 2S - INET + NETMONK (150 Mbps)', 'price' => 845000],
+            ['category_id' => $indibiz->category_id, 'nama_product' => 'INDIBIZ 2S - INET + NETMONK (200 Mbps)', 'price' => 1075000],
+            ['category_id' => $indibiz->category_id, 'nama_product' => 'INDIBIZ 2S - INET + NETMONK (300 Mbps)', 'price' => 1559000],
+            ['category_id' => $indibiz->category_id, 'nama_product' => 'INDIBIZ 2S - INET + OCA (50 Mbps)', 'price' => 543000],
+            ['category_id' => $indibiz->category_id, 'nama_product' => 'INDIBIZ 2S - INET + OCA (75 Mbps)', 'price' => 623000],
+            ['category_id' => $indibiz->category_id, 'nama_product' => 'INDIBIZ 2S - INET + OCA (100 Mbps)', 'price' => 773000],
+            ['category_id' => $indibiz->category_id, 'nama_product' => 'INDIBIZ 2S - INET + OCA (150 Mbps)', 'price' => 923000],
+            ['category_id' => $indibiz->category_id, 'nama_product' => 'INDIBIZ 2S - INET + OCA (200 Mbps)', 'price' => 1153000],
+            ['category_id' => $indibiz->category_id, 'nama_product' => 'INDIBIZ 2S - INET + OCA (300 Mbps)', 'price' => 1603000],
+            ['category_id' => $indibiz->category_id, 'nama_product' => 'INDIBIZ 2S - INET + PIJAR (50 Mbps)', 'price' => 1022000],
+            ['category_id' => $indibiz->category_id, 'nama_product' => 'INDIBIZ 2S - INET + PIJAR (75 Mbps)', 'price' => 1102000],
+            ['category_id' => $indibiz->category_id, 'nama_product' => 'INDIBIZ 2S - INET + PIJAR (100 Mbps)', 'price' => 1252000],
+            ['category_id' => $indibiz->category_id, 'nama_product' => 'INDIBIZ 2S - INET + PIJAR (150 Mbps)', 'price' => 1402000],
+            ['category_id' => $indibiz->category_id, 'nama_product' => 'INDIBIZ 2S - INET + PIJAR (200 Mbps)', 'price' => 1632000],
+            ['category_id' => $indibiz->category_id, 'nama_product' => 'INDIBIZ 2S - INET + PIJAR (300 Mbps)', 'price' => 2082000],
+            ['category_id' => $indibiz->category_id, 'nama_product' => 'INDIBIZ 3S - INET + TELP & IPTV (50 Mbps)', 'price' => 664000],
+            ['category_id' => $indibiz->category_id, 'nama_product' => 'INDIBIZ 3S - INET + TELP & IPTV (75 Mbps)', 'price' => 744000],
+            ['category_id' => $indibiz->category_id, 'nama_product' => 'INDIBIZ 3S - INET + TELP & IPTV (100 Mbps)', 'price' => 894000],
+            ['category_id' => $indibiz->category_id, 'nama_product' => 'INDIBIZ 3S - INET + TELP & IPTV (150 Mbps)', 'price' => 1044000],
+            ['category_id' => $indibiz->category_id, 'nama_product' => 'INDIBIZ 3S - INET + TELP & IPTV (200 Mbps)', 'price' => 1274000],
+            ['category_id' => $indibiz->category_id, 'nama_product' => 'INDIBIZ 3S - INET + TELP & IPTV (300 Mbps)', 'price' => 1724000],
+            ['category_id' => $indibiz->category_id, 'nama_product' => 'INDIBIZ 3S - INET + VOICE & NETMONK (50 Mbps)', 'price' => 506000],
+            ['category_id' => $indibiz->category_id, 'nama_product' => 'INDIBIZ 3S - INET + VOICE & NETMONK (75 Mbps)', 'price' => 586000],
+            ['category_id' => $indibiz->category_id, 'nama_product' => 'INDIBIZ 3S - INET + VOICE & NETMONK (100 Mbps)', 'price' => 736000],
+            ['category_id' => $indibiz->category_id, 'nama_product' => 'INDIBIZ 3S - INET + VOICE & NETMONK (150 Mbps)', 'price' => 886000],
+            ['category_id' => $indibiz->category_id, 'nama_product' => 'INDIBIZ 3S - INET + VOICE & NETMONK (200 Mbps)', 'price' => 1116000],
+            ['category_id' => $indibiz->category_id, 'nama_product' => 'INDIBIZ 3S - INET + VOICE & NETMONK (300 Mbps)', 'price' => 1566000],
+            ['category_id' => $indibiz->category_id, 'nama_product' => 'INDIBIZ 3S - INET + VOICE & OCA (50 Mbps)', 'price' => 582950],
+            ['category_id' => $indibiz->category_id, 'nama_product' => 'INDIBIZ 3S - INET + VOICE & OCA (75 Mbps)', 'price' => 662950],
+            ['category_id' => $indibiz->category_id, 'nama_product' => 'INDIBIZ 3S - INET + VOICE & OCA (100 Mbps)', 'price' => 812950],
+            ['category_id' => $indibiz->category_id, 'nama_product' => 'INDIBIZ 3S - INET + VOICE & OCA (150 Mbps)', 'price' => 962950],
+            ['category_id' => $indibiz->category_id, 'nama_product' => 'INDIBIZ 3S - INET + VOICE & OCA (200 Mbps)', 'price' => 1192950],
+            ['category_id' => $indibiz->category_id, 'nama_product' => 'INDIBIZ 3S - INET + VOICE & OCA (300 Mbps)', 'price' => 1642950],
+            ['category_id' => $indibiz->category_id, 'nama_product' => 'INDIBIZ 3S - INET + VOICE & PIJAR (50 Mbps)', 'price' => 1034000],
+            ['category_id' => $indibiz->category_id, 'nama_product' => 'INDIBIZ 3S - INET + VOICE & PIJAR (75 Mbps)', 'price' => 1114000],
+            ['category_id' => $indibiz->category_id, 'nama_product' => 'INDIBIZ 3S - INET + VOICE & PIJAR (100 Mbps)', 'price' => 1264000],
+            ['category_id' => $indibiz->category_id, 'nama_product' => 'INDIBIZ 3S - INET + VOICE & PIJAR (150 Mbps)', 'price' => 1414000],
+            ['category_id' => $indibiz->category_id, 'nama_product' => 'INDIBIZ 3S - INET + VOICE & PIJAR (200 Mbps)', 'price' => 1644000],
+            ['category_id' => $indibiz->category_id, 'nama_product' => 'INDIBIZ 3S - INET + VOICE & PIJAR (300 Mbps)', 'price' => 2094000],
+
+        ];
+            foreach ($products as $product) {
+                Product::create($product);
+            }
+
+        $addon = Category::where('nama_category', 'ADDON')->first();
+            if (!$addon) {
+                $addon = Category::create(['nama_category' => 'ADDON']);
+            }
+    
+        $products = [
+            ['category_id' => $addon->category_id, 'nama_product' => 'NETMONK', 'price' => 60000],
+            ['category_id' => $addon->category_id, 'nama_product' => 'OCA', 'price' => 103950],
+            ['category_id' => $addon->category_id, 'nama_product' => 'MESH WIFI', 'price' => 29000],
+            ['category_id' => $addon->category_id, 'nama_product' => 'TOMPS', 'price' => 50000],
+            ['category_id' => $addon->category_id, 'nama_product' => 'PIJAR', 'price' => 555000],
+            ['category_id' => $addon->category_id, 'nama_product' => 'VOICE', 'price' => 40000],
+        ];
+        foreach ($products as $product) {
+            Product::create($product);
+        }
+
+
         $astinet = Category::where('nama_category', 'ASTINET')->first();
         if (!$astinet) {
             $astinet = Category::create(['nama_category' => 'ASTINET']);
@@ -166,9 +257,10 @@ class ProductSeeder extends Seeder
         }
 
         $metro_e = Category::where('nama_category', 'METRO-E')->first();
-        if (!$metro_e) {
-            $metro_e = Category::create(['nama_category' => 'METRO-E']);
+            if (!$metro_e) {
+             $metro_e = Category::create(['nama_category' => 'METRO-E']);
         }
+
         $product = [
                 ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Best Effort 1 Mbps', 'price' => 517000],
                 ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Best Effort 2 Mbps', 'price' => 657000],
@@ -199,52 +291,52 @@ class ProductSeeder extends Seeder
                 ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Best Effort 900 Mbps', 'price' => 13815000],
                 ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Best Effort 1000 Mbps', 'price' => 14751000],
                 ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Best Effort 1000 Mbps', 'price' => 14751000],
-                    ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Best Effort 2000 Mbps', 'price' => 28370000],
-                    ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Best Effort 3000 Mbps', 'price' => 40967000],
-                    ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Best Effort 4000 Mbps', 'price' => 52533000],
-                    ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Best Effort 5000 Mbps', 'price' => 63073000],
-                    ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Best Effort 6000 Mbps', 'price' => 72594000],
-                    ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Best Effort 7000 Mbps', 'price' => 81092000],
-                    ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Best Effort 8000 Mbps', 'price' => 88549000],
-                    ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Best Effort 9000 Mbps', 'price' => 94996000],
-                    ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Best Effort 10000 Mbps', 'price' => 100412000],
-                    ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Interaktif 1 Mbps', 'price' => 615000],
-                    ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Interaktif 2 Mbps', 'price' => 783000],
-                    ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Interaktif 3 Mbps', 'price' => 922000],
-                    ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Interaktif 4 Mbps', 'price' => 1061000],
-                    ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Interaktif 5 Mbps', 'price' => 1199000],
-                    ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Interaktif 6 Mbps', 'price' => 1239000],
-                    ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Interaktif 7 Mbps', 'price' => 1303000],
-                    ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Interaktif 8 Mbps', 'price' => 1367000],
-                    ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Interaktif 9 Mbps', 'price' => 1477000],
-                    ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Interaktif 10 Mbps', 'price' => 1599000],
-                    ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Interaktif 20 Mbps', 'price' => 2194000],
-                    ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Interaktif 30 Mbps', 'price' => 2806000],
-                    ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Interaktif 40 Mbps', 'price' => 3408000],
-                    ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Interaktif 50 Mbps', 'price' => 3848000],
-                    ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Interaktif 60 Mbps', 'price' => 4095000],
-                    ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Interaktif 70 Mbps', 'price' => 4350000],
-                    ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Interaktif 80 Mbps', 'price' => 4593000],
-                    ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Interaktif 90 Mbps', 'price' => 4841000],
-                    ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Interaktif 100 Mbps', 'price' => 5096000],
-                    ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Interaktif 200 Mbps', 'price' => 7236000],
-                    ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Interaktif 300 Mbps', 'price' => 8797000],
-                    ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Interaktif 400 Mbps', 'price' => 10202000],
-                    ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Interaktif 500 Mbps', 'price' => 11606000],
-                    ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Interaktif 600 Mbps', 'price' => 13012000],
-                    ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Interaktif 700 Mbps', 'price' => 14191000],
-                    ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Interaktif 800 Mbps', 'price' => 15307000],
-                    ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Interaktif 900 Mbps', 'price' => 16417000],
-                    ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Interaktif 1000 Mbps', 'price' => 17533000],
-                    ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Interaktif 2000 Mbps', 'price' => 33713000],
-                    ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Interaktif 3000 Mbps', 'price' => 48678000],
-                    ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Interaktif 4000 Mbps', 'price' => 62428000],
-                    ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Interaktif 5000 Mbps', 'price' => 74953000],
-                    ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Interaktif 6000 Mbps', 'price' => 86263000],
-                    ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Interaktif 7000 Mbps', 'price' => 96358000],
-                    ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Interaktif 8000 Mbps', 'price' => 105229000],
-                    ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Interaktif 9000 Mbps', 'price' => 112890000],
-                    ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Interaktif 10000 Mbps', 'price' => 119326000],   
+                ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Best Effort 2000 Mbps', 'price' => 28370000],
+                ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Best Effort 3000 Mbps', 'price' => 40967000],
+                ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Best Effort 4000 Mbps', 'price' => 52533000],
+                ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Best Effort 5000 Mbps', 'price' => 63073000],
+                ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Best Effort 6000 Mbps', 'price' => 72594000],
+                ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Best Effort 7000 Mbps', 'price' => 81092000],
+                ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Best Effort 8000 Mbps', 'price' => 88549000],
+                ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Best Effort 9000 Mbps', 'price' => 94996000],
+                ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Best Effort 10000 Mbps', 'price' => 100412000],
+                ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Interaktif 1 Mbps', 'price' => 615000],
+                ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Interaktif 2 Mbps', 'price' => 783000],
+                ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Interaktif 3 Mbps', 'price' => 922000],
+                ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Interaktif 4 Mbps', 'price' => 1061000],
+                ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Interaktif 5 Mbps', 'price' => 1199000],
+                ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Interaktif 6 Mbps', 'price' => 1239000],
+                ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Interaktif 7 Mbps', 'price' => 1303000],
+                ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Interaktif 8 Mbps', 'price' => 1367000],
+                ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Interaktif 9 Mbps', 'price' => 1477000],
+                ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Interaktif 10 Mbps', 'price' => 1599000],
+                ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Interaktif 20 Mbps', 'price' => 2194000],
+                ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Interaktif 30 Mbps', 'price' => 2806000],
+                ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Interaktif 40 Mbps', 'price' => 3408000],
+                ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Interaktif 50 Mbps', 'price' => 3848000],
+                ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Interaktif 60 Mbps', 'price' => 4095000],
+                ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Interaktif 70 Mbps', 'price' => 4350000],
+                ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Interaktif 80 Mbps', 'price' => 4593000],
+                ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Interaktif 90 Mbps', 'price' => 4841000],
+                ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Interaktif 100 Mbps', 'price' => 5096000],
+                ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Interaktif 200 Mbps', 'price' => 7236000],
+                ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Interaktif 300 Mbps', 'price' => 8797000],
+                ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Interaktif 400 Mbps', 'price' => 10202000],
+                ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Interaktif 500 Mbps', 'price' => 11606000],
+                ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Interaktif 600 Mbps', 'price' => 13012000],
+                ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Interaktif 700 Mbps', 'price' => 14191000],
+                ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Interaktif 800 Mbps', 'price' => 15307000],
+                ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Interaktif 900 Mbps', 'price' => 16417000],
+                ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Interaktif 1000 Mbps', 'price' => 17533000],
+                ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Interaktif 2000 Mbps', 'price' => 33713000],
+                ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Interaktif 3000 Mbps', 'price' => 48678000],
+                ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Interaktif 4000 Mbps', 'price' => 62428000],
+                ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Interaktif 5000 Mbps', 'price' => 74953000],
+                ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Interaktif 6000 Mbps', 'price' => 86263000],
+                ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Interaktif 7000 Mbps', 'price' => 96358000],
+                ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Interaktif 8000 Mbps', 'price' => 105229000],
+                ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Interaktif 9000 Mbps', 'price' => 112890000],
+                ['category_id' => $metro_e->category_id, 'nama_product' => 'METRO-E EBIS Intra P2P/P2MP Interaktif 10000 Mbps', 'price' => 119326000],   
         ];
 
         foreach ($products as $product) {
