@@ -3,11 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-
     <title>Kalkulator Non-pots</title>
+
+    <!-- CDN Styles -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
+
+    <!-- Custom Styling -->
     <style>
         :root {
             --telkom-primary: #e60000;
@@ -74,35 +77,60 @@
             background-color: rgba(255, 255, 255, 0.1);
             border-radius: 4px;
         }
+
+        /* Styling khusus Select2 agar cocok dengan Bootstrap */
+        .select2-container--default .select2-selection--single {
+            height: 38px;
+            padding: 6px 12px;
+            font-size: 14px;
+            border: 1px solid #ced4da;
+        }
+
+        .select2-selection__rendered {
+            line-height: 24px;
+        }
+
+        .select2-container {
+            width: 100% !important;
+        }
     </style>
 </head>
+<!-- Select2 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+<!-- jQuery & Select2 -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
 <body class="bg-light">
     <nav class="navbar navbar-expand-lg navbar-dark bg-telkom">
         <div class="container">
             <a class="navbar-brand fw-bold" href="{{ route('calculator.index') }}">
-
                 <i class="fas fa-calculator"></i> Kalkulator Non-pots
             </a>
-            {{-- 
-            <div class="navbar-nav ms-auto">
-                <a class="nav-link" href="{{ route('calculator.index') }}">
-                    <i class="fas fa-home"></i> Beranda
-                </a>
-            </div> 
-            --}}
         </div>
     </nav>
+
     <main class="py-4">
         <div class="container">
             @yield('content')
         </div>
     </main>
+
     <footer class="bg-dark text-white text-center py-3 mt-5">
         <div class="container">
             <p class="mb-0">&copy; {{ date('Y') }} Kalkulator Non-pots. All rights reserved.</p>
         </div>
     </footer>
+
+    <!-- Script JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- jQuery & Select2 -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <!-- Blade stack for additional page scripts -->
     @stack('scripts')
 </body>
 </html>
