@@ -4,7 +4,7 @@
 <div class="card shadow-sm mb-4">
     <div class="card-body">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h4 class="mb-0">Kalkulator Paket</h4>
+            <h4 class="mb-0">Kalkulator Non-Pots</h4>
             <span class="badge bg-secondary">Total Produk: {{ count($products) }}</span>
         </div>
 

@@ -1,35 +1,139 @@
-@extends ('layouts.header')
+@extends ('layouts.head')
+
+@section('body-class', 'bg-light')
 
 @section('main')
-<body class="bg-light">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-telkom">
-        <div class="container">
-            <a class="navbar-brand fw-bold" href="{{ route('calculator.index') }}">
-                <i class="fas fa-calculator"></i> Kalkulator Non-pots
-            </a>
+<style>
+    .sidebar {
+        width: 220px;
+        min-height: 100vh;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 1030;
+        background-color: white;
+        border-right: 1px solid #ddd;
+        transition: all 0.3s ease;
+    }
+
+    .sidebar.collapsed {
+        margin-left: -220px;
+    }
+
+    .main-content {
+        margin-left: 220px;
+        transition: all 0.3s ease;
+    }
+
+    .main-content.full {
+        margin-left: 0;
+    }
+
+    @media (max-width: 768px) {
+        .sidebar {
+            position: fixed;
+            width: 220px;
+            top: 0;
+            left: 0;
+            height: 100%;
+        }
+
+        .main-content {
+            margin-left: 0;
+        }
+    }
+</style>
+
+<div class="d-flex">
+    <!-- Sidebar -->
+    <nav id="sidebar" class="sidebar shadow-sm">
+        <div class="p-4">
+            <h5 class="fw-bold text-danger">Menu</h5>
+            <ul class="nav flex-column mt-3">
+                <li class="nav-item mb-2">
+                    <a href="{{ route('calculator.index') }}" class="nav-link text-dark">
+                        <i class="fas fa-calculator me-2"></i> Non-Pots
+                    </a>
+                </li>
+                @auth
+                    <li class="nav-item mb-2">
+                        <form action="{{ route('logout') }}" method="POST">
+                            @csrf
+                            <button class="btn btn-link nav-link text-dark p-0" type="submit">
+                                <i class="fas fa-sign-out-alt me-2"></i> Logout
+                            </button>
+                        </form>
+                    </li>
+                @else
+                    <li class="nav-item mb-2">
+                        <a href="{{ route('login') }}" class="nav-link text-dark">
+                            <i class="fas fa-sign-in-alt me-2"></i> Login
+                        </a>
+                    </li>
+                    <li class="nav-item mb-2">
+                        <a href="{{ route('register') }}" class="nav-link text-dark">
+                            <i class="fas fa-user-plus me-2"></i> Register
+                        </a>
+                    </li>
+                @endauth
+            </ul>
         </div>
     </nav>
 
-    <main class="py-4">
-        <div class="container">
+    <!-- Konten Utama -->
+    <div id="mainContent" class="main-content w-100">
+        <!-- Navbar -->
+        <nav class="navbar navbar-expand-lg navbar-light bg-telkom border-bottom shadow-sm mb-3">
+            <div class="container">
+                <!-- Tombol toggle sidebar -->
+                <button class="btn btn-outline-light me-3" id="toggleSidebar">
+                    <i class="fas fa-bars"></i>
+                </button>
+
+                <a class="text-white navbar-brand fw-bold" href="{{ route('calculator.index') }}">
+                    <i class="fas fa-calculator me-1"></i> Kalkulator Paket
+                </a>
+
+                <div class="d-flex">
+                    @auth
+                        <form action="{{ route('logout') }}" method="POST">
+                            @csrf
+                            <button type="submit" class="btn btn-outline-light rounded-pill">
+                                <i class="fas fa-sign-out-alt me-1"></i> Logout
+                            </button>
+                        </form>
+                    @else
+                        <a href="{{ route('login') }}" class="btn btn-outline-light rounded-pill">
+                            <i class="fas fa-sign-in-alt me-1"></i> Login
+                        </a>
+                    @endauth
+                </div>
+            </div>
+        </nav>
+
+        <!-- Konten -->
+        <main class="py-4 px-3">
             @yield('content')
-        </div>
-    </main>
+        </main>
 
-    <footer class="bg-dark text-white text-center py-3 mt-5">
-        <div class="container">
-            <p class="mb-0">&copy; {{ date('Y') }} Kalkulator Non-pots. All rights reserved.</p>
-        </div>
-    </footer>
+        <!-- Footer -->
+        <footer class="bg-dark text-white text-center py-3 mt-5">
+            <div class="container">
+                <p class="mb-0">&copy; {{ date('Y') }} Kalkulator Non-pots. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+</div>
 
-    <!-- Script JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Script toggle -->
+<script>
+    const toggleBtn = document.getElementById('toggleSidebar');
+    const sidebar = document.getElementById('sidebar');
+    const mainContent = document.getElementById('mainContent');
 
-    <!-- jQuery & Select2 -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
-    <!-- Blade stack for additional page scripts -->
-    @stack('scripts')
-</body>
+    toggleBtn.addEventListener('click', () => {
+        sidebar.classList.toggle('collapsed');
+        mainContent.classList.toggle('full');
+    });
+</script>
 @endsection
