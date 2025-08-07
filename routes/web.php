@@ -8,7 +8,7 @@ use App\Http\Controllers\OTCController;
 use App\Http\Controllers\CalculatorController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
-
+use App\Http\Controllers\PotsController;
 // ===============================
 // API Routes
 // ===============================
@@ -19,6 +19,8 @@ Route::post('products/{id}/calculate-price', [ProductController::class, 'calcula
 Route::get('products/category/{categoryId}', [ProductController::class, 'getByCategory']);
 Route::apiResource('otcs', OTCController::class);
 Route::get('otcs/category/{category}', [OTCController::class, 'getByCategory']);
+Route::get('/pots', [PotsController::class, 'index'])->name('pots.index');
+
 
 // ===============================
 // Web Routes (Butuh Login)

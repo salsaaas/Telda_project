@@ -13,6 +13,9 @@ class CategorySeeder extends Seeder
             ['nama_category' => 'ASTINET'],
             ['nama_category' => 'IP TRANSIT'],
             ['nama_category' => 'METRO-E'],
+
+             ['nama_category' => 'INDIBIZ'], 
+            ['nama_category' => 'ADDON'], 
         ];
         foreach ($categories as $category) {
             Category::create($category);
