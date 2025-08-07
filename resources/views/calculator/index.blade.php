@@ -2,10 +2,12 @@
 
 @section('content')
 <div class="card shadow-sm mb-4">
-    <div class="card-body">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h4 class="mb-0">Kalkulator Non-Pots</h4>
-            <span class="badge bg-secondary">Total Produk: {{ count($products) }}</span>
+    <div class="card-body mt-2">
+        <div class="text-center position-relative mb-3">
+            <h4 class="mb-0 fw-bold">Kalkulator Non-Pots</h4>
+            <span class="badge bg-secondary position-absolute end-0 top-50 translate-middle-y">
+                Total Produk: {{ count($products) }}
+            </span>
         </div>
 
         @if(session('success'))
@@ -22,27 +24,27 @@
 
         <form id="calculatorForm">
             @csrf
-            <div class="table-responsive">
-                <table class="table table-bordered" id="calculatorTable">
-                    <thead>
+            <div class="table-responsive" style="overflow-x: auto;">
+                <table class="table table-bordered text-center" style="min-width: 2000px; width: 100%;">
+                    <thead class="table-light">
                         <tr>
-                            <th>Category Product</th>
-                            <th>Product Name</th>
-                            <th>Skema</th>
-                            <th>Qty</th>
-                            <th>Price (Rp)</th>
-                            <th>OTC (Rp)</th>
-                            <th>Discont Price</th>
-                            <th>Discont OTC</th>
-                            <th>Price x Discount</th>
-                            <th>OTC x Discount</th>
-                            <th>Duration (Bulan)</th>
-                            <th>OTC</th>
-                            <th>Monthly Price</th>
-                            <th>Monthly Price with PPN</th>
-                            <th>Year Price</th>
-                            <th>Final Price with PPN</th>
-                            <th>Aksi</th>
+                        <th style="min-width: 150px;">Category Product</th>
+                <th style="min-width: 450px;">Product Name</th>
+                <th style="min-width: 180px;">Skema</th>
+                <th style="min-width: 80px;">Qty</th>
+                <th style="min-width: 2px;">Price (Rp)</th>
+                <th style="min-width: 120px;">OTC (Rp)</th>
+                <th style="min-width: 130px;">Discont Price</th>
+                <th style="min-width: 130px;">Discont OTC</th>
+                <th style="min-width: 150px;">Price x Discount</th>
+                <th style="min-width: 150px;">OTC x Discount</th>
+                <th style="min-width: 120px;">Duration (Bulan)</th>
+                <th style="min-width: 120px;">OTC</th>
+                <th style="min-width: 150px;">Monthly Price</th>
+                <th style="min-width: 180px;">Monthly Price with PPN</th>
+                <th style="min-width: 150px;">Year Price</th>
+                <th style="min-width: 180px;">Final Price with PPN</th>
+                <th style="min-width: 100px;">Aksi</th>
                         </tr>
                     </thead>
                     <tbody id="calculatorRows">
@@ -55,6 +57,7 @@
                                     @endforeach
                                 </select>
                             </td>
+                            
                             <td>
                                 <select name="items[0][product_id]" class="form-select product-select" required>
                                     <option value="">-</option>
@@ -69,10 +72,10 @@
                                 </select>
                             </td>
                             <td>
-                                <select name="items[0][otc_category]" class="form-select otc-select" required>
-                                    <option value="OTC KONTAN" data-price="0">OTC KONTAN</option>
-                                    <option value="AO DISCOUNT" data-price="150000">AO DISCOUNT</option>
-                                    <option value="AO NORMAL" data-price="500000">AO NORMAL</option>
+                                <select name="items[0][skema]" class="form-select otc-select" required>
+                                    <option value="">-</option>
+                                    <option value="OTC KONTAN" data-price="2500000">OTC KONTAN</option>
+                                    <option value="OTC PERBULAN" data-price="2500000">OTC PERBULAN</option>
                                 </select>
                             </td>
                             <td><input type="number" name="items[0][qty]" class="form-control qty-input" value="1" min="1" required></td>
@@ -92,6 +95,7 @@
                         </tr>
                     </tbody>
                 </table>
+                <button type="button" class="btn btn-success btn-sm mt-2" id="addRowBtn"><i class="fas fa-plus"></i> Tambah Baris</button>
             </div>
         </form>
     </div>
@@ -100,78 +104,92 @@
 
 @push('scripts')
 <script>
-document.addEventListener('change', function(e) {
-    if (e.target.classList.contains('product-select')) {
-        const row = e.target.closest('.calculator-row');
-        const selected = e.target.selectedOptions[0];
-        const price = parseFloat(selected.dataset.price) || 0;
-        const discount = parseFloat(selected.dataset.discount) || 0;
-        row.querySelector('.price-value').value = price;
-        row.querySelector('.price-display').textContent = formatCurrency(price);
-        row.querySelector('.discounted-price').textContent = formatCurrency(discount);
-        row.querySelector('.price-times-discount').textContent = formatCurrency(price * discount);
-        updateRow(row);
+document.addEventListener('DOMContentLoaded', () => {
+    function formatCurrency(amount) {
+        return 'Rp ' + new Intl.NumberFormat('id-ID').format(Math.round(amount));
     }
-    if (e.target.classList.contains('otc-select')) {
-        const row = e.target.closest('.calculator-row');
-        const selected = e.target.selectedOptions[0];
-        const otcPrice = parseFloat(selected.dataset.price) || 0;
-        row.querySelector('.otc-value').value = otcPrice;
-        row.querySelector('.otc-display').textContent = formatCurrency(otcPrice);
-        row.querySelector('.otc-times-discount').textContent = formatCurrency(otcPrice * 1);
-        updateRow(row);
+
+    function calculatePPN(price) {
+        return price * 1.11;
     }
-    if (e.target.classList.contains('category-select')) {
-        const row = e.target.closest('.calculator-row');
-        const categoryId = e.target.value;
-        const productSelect = row.querySelector('.product-select');
-        productSelect.value = '';
-        Array.from(productSelect.options).forEach(option => {
-            option.style.display = option.dataset.category === categoryId || option.value === '' ? 'block' : 'none';
-        });
-        row.querySelector('.price-value').value = 0;
-        row.querySelector('.price-display').textContent = formatCurrency(0);
-        updateRow(row);
-    }
-});
 
-function formatCurrency(amount) {
-    return 'Rp ' + new Intl.NumberFormat('id-ID').format(Math.round(amount));
-}
-
-function calculatePPN(price) {
-    return price * 1.11;
-}
-
-function updateRow(row) {
-    const price = parseFloat(row.querySelector('.price-value').value) || 0;
-    const discount = parseFloat(row.querySelector('.discounted-price').textContent.replace(/[^\d]/g, '')) || 0;
-    const otc = parseFloat(row.querySelector('.otc-value').value) || 0;
-    const duration = parseInt(row.querySelector('.duration-input').value) || 1;
-    const priceWithPPN = calculatePPN(price);
-    const priceDuration = priceWithPPN * duration;
-    const finalPriceNoPPN = (price * duration) + otc;
-    const finalPrice = priceDuration + (otc * 1.11);
-    row.querySelector('.monthly-price').textContent = formatCurrency(price);
-    row.querySelector('.monthly-price-ppn').textContent = formatCurrency(priceWithPPN);
-    row.querySelector('.yearly-price').textContent = formatCurrency(price * 12);
-    row.querySelector('.final-price-ppn').textContent = formatCurrency(finalPrice);
-}
-
-function updateGrandTotal() {
-    let total = 0;
-    document.querySelectorAll('.calculator-row').forEach(row => {
-        const price = parseFloat(row.querySelector('.price-value').value) || 0;
-        const otc = parseFloat(row.querySelector('.otc-value').value) || 0;
+    function updateRow(row) {
+        const qty = parseInt(row.querySelector('.qty-input').value) || 1;
         const duration = parseInt(row.querySelector('.duration-input').value) || 1;
-        if (price > 0) {
-            const priceWithPPN = calculatePPN(price);
-            const priceDuration = priceWithPPN * duration;
-            const finalPrice = priceDuration + (otc * 1.11);
-            total += finalPrice;
-        }
-    });
-    document.getElementById('grandTotal').textContent = formatCurrency(total);
-}
+
+        const basePrice = parseFloat(row.querySelector('.price-value').value) || 0;
+        const otc = parseFloat(row.querySelector('.otc-value').value) || 0;
+        const discountPrice = basePrice; // bisa diganti jika logika diskon berubah
+
+        const totalPrice = basePrice * qty;
+        const totalOtc = otc * qty;
+
+        const ppnPrice = calculatePPN(totalPrice);
+        const finalPrice = (ppnPrice * duration) + (totalOtc * 1.11);
+
+        row.querySelector('.price-display').textContent = formatCurrency(totalPrice);
+        row.querySelector('.discounted-price').textContent = formatCurrency(discountPrice);
+        row.querySelector('.price-times-discount').textContent = formatCurrency(discountPrice * qty);
+        row.querySelector('.otc-display').textContent = formatCurrency(totalOtc);
+        row.querySelector('.otc-times-discount').textContent = formatCurrency(totalOtc);
+        row.querySelector('.monthly-price').textContent = formatCurrency(totalPrice);
+        row.querySelector('.monthly-price-ppn').textContent = formatCurrency(ppnPrice);
+        row.querySelector('.monthly-otc').textContent = formatCurrency(totalOtc);
+        row.querySelector('.yearly-price').textContent = formatCurrency(totalPrice * 12);
+        row.querySelector('.final-price-ppn').textContent = formatCurrency(finalPrice);
+    }
+
+    function attachRowEvents(row) {
+        row.querySelector('.category-select').addEventListener('change', function () {
+            const categoryId = this.value;
+            const productSelect = row.querySelector('.product-select');
+            productSelect.value = '';
+            Array.from(productSelect.options).forEach(option => {
+                option.style.display = option.dataset.category === categoryId || option.value === '' ? 'block' : 'none';
+            });
+            row.querySelector('.price-value').value = 0;
+            updateRow(row);
+        });
+
+        row.querySelector('.product-select').addEventListener('change', function () {
+            const selected = this.selectedOptions[0];
+            const price = parseFloat(selected.dataset.price) || 0;
+            row.querySelector('.price-value').value = price;
+            updateRow(row);
+        });
+
+        row.querySelector('.otc-select').addEventListener('change', function () {
+            const selected = this.selectedOptions[0];
+            const otcPrice = parseFloat(selected.dataset.price) || 0;
+            row.querySelector('.otc-value').value = otcPrice;
+            updateRow(row);
+        });
+
+        row.querySelector('.qty-input').addEventListener('input', () => updateRow(row));
+        row.querySelector('.duration-input').addEventListener('input', () => updateRow(row));
+        row.querySelector('.remove-row').addEventListener('click', () => row.remove());
+    }
+
+    function addRow() {
+        const rowCount = document.querySelectorAll('.calculator-row').length;
+        const templateRow = document.querySelector('.calculator-row');
+        const newRow = templateRow.cloneNode(true);
+
+        newRow.querySelectorAll('input, select').forEach((el) => {
+            if (el.name) el.name = el.name.replace(/\[\d+\]/, `[${rowCount}]`);
+            if (el.tagName === 'SELECT') el.selectedIndex = 0;
+            else if (el.type === 'number') el.value = 1;
+            else el.value = '';
+        });
+
+        newRow.querySelectorAll('span').forEach(span => span.textContent = 'Rp 0');
+
+        document.getElementById('calculatorRows').appendChild(newRow);
+        attachRowEvents(newRow);
+    }
+
+    document.querySelectorAll('.calculator-row').forEach(row => attachRowEvents(row));
+    document.getElementById('addRowBtn').addEventListener('click', addRow);
+});
 </script>
 @endpush
