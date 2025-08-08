@@ -8,11 +8,19 @@ class NonpotsController extends Controller
     public function index()
     {
         // Ambil data categories dan products dari database
-        $categories = \App\Models\Category::all(); 
-        $products = \App\Models\Product::all(); 
+            // Ambil hanya kategori tertentu
+            $categories = \App\Models\Category::whereIn('nama_category', [
+                'ASTINET',
+                'IP TRANSIT',
+                'METRO-E',
+            ])->get(); 
         
-        return view('nonpots.index', compact('categories', 'products'));
-    }
+            // Tetap ambil semua produk
+            $products = \App\Models\Product::all(); 
+            
+            return view('nonpots.index', compact('categories', 'products'));
+        }
+        
 
     public function printPdf(Request $request)
     {

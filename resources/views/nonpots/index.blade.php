@@ -29,22 +29,22 @@
                     <thead class="table-light">
                         <tr>
                         <th style="min-width: 150px;">Category Product</th>
-                <th style="min-width: 450px;">Product Name</th>
-                <th style="min-width: 180px;">Skema</th>
-                <th style="min-width: 80px;">Qty</th>
-                <th style="min-width: 2px;">Price (Rp)</th>
-                <th style="min-width: 120px;">OTC (Rp)</th>
-                <th style="min-width: 130px;">Discont Price</th>
-                <th style="min-width: 130px;">Discont OTC</th>
-                <th style="min-width: 150px;">Price x Discount</th>
-                <th style="min-width: 150px;">OTC x Discount</th>
-                <th style="min-width: 120px;">Duration (Bulan)</th>
-                <th style="min-width: 120px;">OTC</th>
-                <th style="min-width: 150px;">Monthly Price</th>
-                <th style="min-width: 180px;">Monthly Price with PPN</th>
-                <th style="min-width: 150px;">Year Price</th>
-                <th style="min-width: 180px;">Final Price with PPN</th>
-                <th style="min-width: 100px;">Aksi</th>
+                        <th style="min-width: 450px;">Product Name</th>
+                        <th style="min-width: 180px;">Skema</th>
+                        <th style="min-width: 80px;">Qty</th>
+                        <th style="min-width: 2px;">Price (Rp)</th>
+                        <th style="min-width: 120px;">OTC (Rp)</th>
+                        <th style="min-width: 130px;">Discont Price</th>
+                        <th style="min-width: 130px;">Discont OTC</th>
+                        <th style="min-width: 150px;">Price x Discount</th>
+                        <th style="min-width: 150px;">OTC x Discount</th>
+                        <th style="min-width: 120px;">Duration (Bulan)</th>
+                        <th style="min-width: 120px;">OTC</th>
+                        <th style="min-width: 150px;">Monthly Price</th>
+                        <th style="min-width: 180px;">Monthly Price with PPN</th>
+                        <th style="min-width: 150px;">Year Price</th>
+                        <th style="min-width: 180px;">Final Price with PPN</th>
+                        <th style="min-width: 100px;">Aksi</th>
                         </tr>
                     </thead>
                     <tbody id="calculatorRows">
@@ -177,7 +177,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
         row.querySelector('.qty-input').addEventListener('input', () => updateRow(row));
         row.querySelector('.duration-input').addEventListener('input', () => updateRow(row));
-        row.querySelector('.remove-row').addEventListener('click', () => row.remove());
+        row.querySelector('.remove-row').addEventListener('click', () => {
+    row.querySelectorAll('input').forEach(input => {
+        if (input.type === 'number') {
+            input.value = 1;
+        } else {
+            input.value = '';
+        }
+    });
+
+    row.querySelectorAll('select').forEach(select => {
+        select.selectedIndex = 0;
+    });
+
+    row.querySelectorAll('span').forEach(span => {
+        span.textContent = 'Rp 0';
+    });
+
+    row.querySelector('.price-value').value = 0;
+    row.querySelector('.otc-value').value = 0;
+});
+
     }
 
     function addRow() {

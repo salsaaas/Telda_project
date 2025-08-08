@@ -13,10 +13,15 @@ class PotsController extends Controller
 public function index()
 {
    
-        $products = Productpots::all();
-        $categories = Categorypots::all();
+        $categories = \App\Models\Category::whereIn('nama_category', [
+                'INDIBIZ',
+                'ADDON',
+            ])->get(); 
+        
+            // Tetap ambil semua produk
+            $products = \App\Models\Product::all(); 
+            
+            return view('nonpots.index', compact('categories', 'products'));
+        }
+}
 
-        return view('pots.index', compact('products', 'categories'));
-    
-}
-}
