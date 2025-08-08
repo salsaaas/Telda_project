@@ -111,39 +111,49 @@
         <thead>
             <tr>
                 <th style="width: 4%;">No</th>
-                <th style="width: 10%;">Category</th>
-                <th style="width: 20%;">Product Name</th>
-                <th style="width: 10%;">OTC Category</th>
-                <th style="width: 9%;">Harga (Rp)</th>
-                <th style="width: 9%;">OTC (Rp)</th>
-                <th style="width: 7%;">Durasi</th>
-                <th style="width: 10%;">Harga + PPN (Rp)</th>
-                <th style="width: 10%;">Harga x Durasi (Rp)</th>
-                <th style="width: 11%;">Final Price no PPN (Rp)</th>
-                <th style="width: 11%;">Final Price (Rp)</th>
+                <th style="min-width: 150px;">Category Product</th>
+                <th style="min-width: 450px;">Product Name</th>
+                <th style="min-width: 180px;">Skema</th>
+                <th style="min-width: 80px;">Qty</th>                        <th style="min-width: 2px;">Price (Rp)</th>
+                <th style="min-width: 120px;">OTC (Rp)</th>
+                <th style="min-width: 130px;">Discont Price</th>
+                <th style="min-width: 130px;">Discont OTC</th>
+                <th style="min-width: 150px;">Price x Discount</th>
+                <th style="min-width: 150px;">OTC x Discount</th>
+                <th style="min-width: 120px;">Duration (Bulan)</th>
+                <th style="min-width: 120px;">OTC</th>
+                <th style="min-width: 150px;">Monthly Price</th>
+                <th style="min-width: 180px;">Monthly Price with PPN</th>
+                <th style="min-width: 150px;">Year Price</th>
+                <th style="min-width: 180px;">Final Price with PPN</th>
             </tr>
         </thead>
         <tbody>
-            @foreach($items as $index => $item)
-            <tr>
-                <td>{{ $index + 1 }}</td>
-                <td class="text-left">{{ $item['category_name'] }}</td>
-                <td class="text-left">{{ $item['product_name'] }}</td>
-                <td class="text-center">{{ $item['otc_category'] }}</td>
-                <td class="text-right currency">{{ number_format($item['price'], 0, ',', '.') }}</td>
-                <td class="text-right currency">{{ number_format($item['otc'], 0, ',', '.') }}</td>
-                <td class="text-center">{{ $item['duration'] }} bln</td>
-                <td class="text-right currency">{{ number_format($item['price_with_ppn'], 0, ',', '.') }}</td>
-                <td class="text-right currency">{{ number_format($item['price_duration'], 0, ',', '.') }}</td>
-                <td class="text-right currency" style="font-weight: bold; background-color: #fff3cd;">
-                    {{ number_format($item['final_price_no_ppn'], 0, ',', '.') }}
-                </td>
-                <td class="text-right currency" style="font-weight: bold; background-color: #f8f9fa;">
-                    {{ number_format($item['final_price'], 0, ',', '.') }}
-                </td>
-            </tr>
-            @endforeach
-        </tbody>
+    @foreach($items as $index => $item)
+    <tr>
+        <td>{{ $index + 1 }}</td>
+        <td class="text-left">{{ $item['category_name'] }}</td>
+        <td class="text-left">{{ $item['product_name'] }}</td>
+        <td class="text-center">{{ $item['otc_category'] }}</td>
+        <td>{{ $item['qty'] }}</td>
+        <td class="text-right currency">{{ number_format($item['price'], 0, ',', '.') }}</td>
+        <td class="text-right currency">{{ number_format($item['otc'], 0, ',', '.') }}</td>
+        <td class="text-right currency">{{ number_format($item['discount_price'], 0, ',', '.') }}</td>
+        <td class="text-right currency">{{ number_format($item['discount_otc'], 0, ',', '.') }}</td>
+        <td class="text-right currency">{{ number_format($item['price_x_discount'], 0, ',', '.') }}</td>
+        <td class="text-right currency">{{ number_format($item['otc_x_discount'], 0, ',', '.') }}</td>
+        <td class="text-center">{{ $item['duration'] }}</td>
+        <td class="text-right currency">{{ number_format($item['otc_total'], 0, ',', '.') }}</td>
+        <td class="text-right currency">{{ number_format($item['monthly_price'], 0, ',', '.') }}</td>
+        <td class="text-right currency">{{ number_format($item['monthly_price_ppn'], 0, ',', '.') }}</td>
+        <td class="text-right currency">{{ number_format($item['year_price'], 0, ',', '.') }}</td>
+        <td class="text-right currency" style="font-weight: bold; background-color: #f8f9fa;">
+            {{ number_format($item['final_price'], 0, ',', '.') }}
+        </td>
+    </tr>
+    @endforeach
+</tbody>
+
     </table>
 
     <div class="total-section">
