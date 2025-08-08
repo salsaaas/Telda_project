@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\OTCController;
-use App\Http\Controllers\CalculatorController;
+use App\Http\Controllers\NonpotsController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\PotsController;
@@ -20,6 +20,7 @@ Route::get('products/category/{categoryId}', [ProductController::class, 'getByCa
 Route::apiResource('otcs', OTCController::class);
 Route::get('otcs/category/{category}', [OTCController::class, 'getByCategory']);
 Route::get('/pots', [PotsController::class, 'index'])->name('pots.index');
+Route::get('/nonpots', [NonpotsController::class, 'index'])->name('nonpots.index');
 
 
 // ===============================
@@ -27,10 +28,10 @@ Route::get('/pots', [PotsController::class, 'index'])->name('pots.index');
 // ===============================
 
 Route::middleware('auth')->group(function () {
-    Route::get('/calculator', [CalculatorController::class, 'index'])->name('calculator.index');
-    Route::post('/calculator', [CalculatorController::class, 'store'])->name('calculator.store');
-    Route::post('/calculator/print-pdf', [CalculatorController::class, 'printPdf'])->name('calculator.print-pdf');
-
+    Route::get('/nonpots', [NonpotsController::class, 'index'])->name('nonpots.index');
+    Route::post('/nonpots', [NonpotsController::class, 'store'])->name('nonpots.store');
+    Route::post('/nonpots/print-pdf', [NonpotsController::class, 'printPdf'])->name('nonpots.print-pdf');
+;
     // Logout hanya bisa dilakukan saat login
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 });
@@ -55,6 +56,6 @@ Route::middleware('guest')->group(function () {
 
 Route::get('/', function () {
     return Auth::check()
-        ? redirect()->route('calculator.index')
+        ? redirect()->route('nonpots.index')
         : redirect()->route('login');
 });

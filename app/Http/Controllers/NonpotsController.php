@@ -3,7 +3,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 
-class CalculatorController extends Controller
+class NonpotsController extends Controller
 {
     public function index()
     {
@@ -11,7 +11,7 @@ class CalculatorController extends Controller
         $categories = \App\Models\Category::all(); 
         $products = \App\Models\Product::all(); 
         
-        return view('calculator.index', compact('categories', 'products'));
+        return view('nonpots.index', compact('categories', 'products'));
     }
 
     public function printPdf(Request $request)
@@ -69,7 +69,7 @@ class CalculatorController extends Controller
         ];
 
         // Generate PDF
-        $pdf = PDF::loadView('calculator.pdf', $data);
+        $pdf = PDF::loadView('nonpots.pdf', $data);
         
         // Set paper size dan orientasi
         $pdf->setPaper('A4', 'landscape');
