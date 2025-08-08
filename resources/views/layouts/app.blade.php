@@ -55,10 +55,9 @@
                         <i class="fas fa-calculator me-2"></i> Non-Pots
                     </a>
                 </li>
-                <li class="nav-item">
-                <a class="nav-link" href="{{ route('pots.index') }}">
-                <i class="fas fa-calculator me-2"></i>
-                <span>Pots</span>
+                <li class="nav-item mb-2">
+                <a  href="{{ route('pots.index') }} " class="nav-link text-dark">
+                    <i class="fas fa-calculator me-2"></i>Pots
                 </a>
                 </li>
 
