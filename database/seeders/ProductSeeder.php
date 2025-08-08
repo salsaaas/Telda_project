@@ -158,10 +158,9 @@ class ProductSeeder extends Seeder
                 ['category_id' => $ip_transit->category_id, 'nama_product' => 'IP TRANSIT DOMESTIK - (7000 Mbps)', 'price' => 88748000],
                 ['category_id' => $ip_transit->category_id, 'nama_product' => 'IP TRANSIT DOMESTIK - (8000 Mbps)', 'price' => 101395000],
                 ['category_id' => $ip_transit->category_id, 'nama_product' => 'IP TRANSIT DOMESTIK - (9000 Mbps)', 'price' => 114012000],
-                ['category_id' => $ip_transit->category_id, 'nama_product' => 'IP TRANSIT DOMESTIK - (10000 Mbps)', 'price' => 125544000],
-                
+                ['category_id' => $ip_transit->category_id, 'nama_product' => 'IP TRANSIT DOMESTIK - (10000 Mbps)', 'price' => 125544000],             
         ];
-
+        
         foreach ($products as $product) {
             Product::create($product);
         }
