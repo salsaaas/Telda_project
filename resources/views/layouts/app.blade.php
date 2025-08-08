@@ -51,14 +51,13 @@
             <h5 class="fw-bold text-danger">Menu</h5>
             <ul class="nav flex-column mt-3">
                 <li class="nav-item mb-2">
-                    <a href="{{ route('calculator.index') }}" class="nav-link text-dark">
+                    <a href="{{ route('nonpots.index') }}" class="nav-link text-dark">
                         <i class="fas fa-calculator me-2"></i> Non-Pots
                     </a>
                 </li>
-                <li class="nav-item">
-                <a class="nav-link" href="{{ route('pots.index') }}">
-                <i class="fas fa-calculator me-2"></i>
-                <span>Pots</span>
+                <li class="nav-item mb-2">
+                <a  href="{{ route('pots.index') }} " class="nav-link text-dark">
+                    <i class="fas fa-calculator me-2"></i>Pots
                 </a>
                 </li>
 
@@ -97,7 +96,7 @@
                     <i class="fas fa-bars"></i>
                 </button>
 
-                <a class="text-white navbar-brand fw-bold" href="{{ route('calculator.index') }}">
+                <a class="text-white navbar-brand fw-bold" href="{{ route('nonpots.index') }}">
                     <i class="fas fa-calculator me-1"></i> Kalkulator Paket
                 </a>
 

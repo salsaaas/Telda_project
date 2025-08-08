@@ -85,8 +85,9 @@ class ProductController extends Controller
             'total_price' => $totalPrice
         ]);
     }
-    public function getByCategory($categoryId)
+    public function getByCategory($request)
     {
+        $categoryId = $request->query('category');
         $products = Product::with(['category', 'otcs'])
             ->where('category_id', $categoryId)
             ->get();

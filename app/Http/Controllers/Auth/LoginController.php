@@ -23,7 +23,7 @@ class LoginController extends Controller
         if (Auth::attempt($credentials, $request->remember)) {
             $request->session()->regenerate();
 
-            return redirect()->intended('/calculator'); // setelah login berhasil
+            return redirect()->intended('/nonpots'); // setelah login berhasil
         }
 
         return back()->withErrors([

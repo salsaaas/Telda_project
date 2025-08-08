@@ -97,6 +97,16 @@
                 </table>
                 <button type="button" class="btn btn-success btn-sm mt-2" id="addRowBtn"><i class="fas fa-plus"></i> Tambah Baris</button>
             </div>
+             <div class="d-flex align-items-center">
+                    <span class="me-3"><strong>Total Keseluruhan: <span id="grandTotal" class="text-danger">Rp 0</span></strong></span>
+                    <button type="button" class="btn btn-secondary me-2" id="resetBtn">
+                        <i class="fas fa-undo"></i> Reset
+                    </button>
+                    <button type="button" class="btn btn-navy" id="printPdfBtn">
+                        <i class="fas fa-file-pdf"></i> Print PDF
+                    </button>
+                </div>
+            </div>
         </form>
     </div>
 </div>

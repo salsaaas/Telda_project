@@ -10,9 +10,8 @@ class CategorySeeder extends Seeder
     public function run(): void
     {
         $categories = [
-            ['nama_category' => 'ASTINET'],
-            ['nama_category' => 'IP TRANSIT'],
-            ['nama_category' => 'METRO-E'], 
+            ['nama_category' => 'INDIBIZ'],
+            ['nama_category' => 'ADDON'],
         ];
         foreach ($categories as $category) {
             Category::create($category);

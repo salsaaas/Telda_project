@@ -22,7 +22,6 @@ class DatabaseSeeder extends Seeder
             CategorySeeder::class,
             ProductSeeder::class,
             OTCSeeder::class,
-            ProductSeeder::class,
             POTSProductSeeder::class,
         ]);
     }

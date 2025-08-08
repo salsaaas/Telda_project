@@ -35,6 +35,6 @@ class RegisterController extends Controller
 
         Auth::login($user);
 
-        return redirect()->route('calculator.index');
+        return redirect()->route('nonpots.index');
     }
 }
