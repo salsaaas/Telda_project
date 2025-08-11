@@ -21,7 +21,6 @@ Route::apiResource('otcs', OTCController::class);
 Route::get('otcs/category/{category}', [OTCController::class, 'getByCategory']);
 Route::get('/pots', [PotsController::class, 'index'])->name('pots.index');
 Route::get('/nonpots', [NonpotsController::class, 'index'])->name('nonpots.index');
-Route::get('/get-products', [ProductController::class, 'getByCategory']);
 
 
 // ===============================

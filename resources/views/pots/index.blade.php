@@ -44,24 +44,25 @@
                     <tbody id="calculatorRows">
                         <tr class="calculator-row">
                             <td>
-                                <select name="items[0][category_id]" class="form-select category-select" required>
-                                    <option value="">-</option>
-                                    @foreach($categories as $category)
-                                        <option value="{{ $category->category_id }}" data-name="{{ $category->nama_category }}">{{ $category->nama_category }}</option>
-                                    @endforeach
+                            <select name="items[0][category_id]" class="form-select" required>
+                        @foreach($categories as $category)
+                            <option value="{{ $category->id }}">{{ $category->nama_category }}</option>
+                        @endforeach
+                    </select>
                                 </select>
                             </td>
                             <td>
                                 <select name="items[0][product_id]" class="form-select product-select" required>
                                     <option value="">-</option>
                                     @foreach($products as $product)
-                                        <option value="{{ $product->id }}" 
-                                                data-price="{{ $product->price }}" 
-                                                data-category="{{ $product->category_id }}"
-                                                data-name="{{ $product->nama_product }}">
-                                            {{ $product->nama_product }}
-                                        </option>
-                                    @endforeach
+                                    <option value="{{ $product->id }}" 
+                                            data-price="{{ $product->price }}" 
+                                            data-category="{{ $product->category_id }}"
+                                            data-name="{{ $product->nama_product }}">
+                                        {{ $product->nama_product }}
+                                    </option>
+                                @endforeach
+
                                 </select>
                             </td>
                             <td>
@@ -127,12 +128,12 @@
 <template id="row-template">
     <tr class="calculator-row">
         <td>
-            <select name="items[][category_id]" class="form-select category-select" required>
-                <option value="">-</option>
-                @foreach($categories as $category)
-                    <option value="{{ $category->category_id }}" data-name="{{ $category->nama_category }}">{{ $category->nama_category }}</option>
-                @endforeach
-            </select>
+        <select name="items[0][category_id]" class="form-select" required>
+    @foreach($categories as $category)
+        <option value="{{ $category->id }}">{{ $category->nama_category }}</option>
+    @endforeach
+</select>
+
         </td>
         <td>
             <select name="items[][product_id]" class="form-select product-select" required>
@@ -238,14 +239,16 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function updateRowIndices() {
-        document.querySelectorAll('.calculator-row').forEach((row, index) => {
-            row.querySelectorAll('select, input').forEach(field => {
-                if (field.name) {
-                    field.name = field.name.replace(/\[\d*\]/, [${index}]);
-                }
-            });
+    document.querySelectorAll('.calculator-row').forEach((row, index) => {
+        row.querySelectorAll('select, input').forEach(field => {
+            if (field.name) {
+                const newName = field.name.replace(/\[\d*\]/, `[${index}]`);
+                field.name = newName;
+            }
         });
-    }
+    });
+}
+
 
     function validateForm() {
         const title = document.getElementById('calculationTitle').value.trim();
@@ -293,25 +296,26 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     document.addEventListener('change', function(e) {
-        if (e.target.classList.contains('product-select')) {
-            const row = e.target.closest('.calculator-row');
-            const selected = e.target.selectedOptions[0];
-            const price = parseFloat(selected.dataset.price) || 0;
-            
-            row.querySelector('.price-value').value = price;
-            row.querySelector('.price-display').textContent = formatCurrency(price);
-            updateRow(row);
+        if (e.target.classList.contains('category-select')) {
+    const row = e.target.closest('.calculator-row');
+    const categoryId = e.target.value;
+    const productSelect = row.querySelector('.product-select');
+    
+    Array.from(productSelect.options).forEach(option => {
+        if (option.value === '') {
+            option.style.display = 'block';
+        } else {
+            option.style.display = option.dataset.category === categoryId ? 'block' : 'none';
         }
-        
-        if (e.target.classList.contains('otc-select')) {
-            const row = e.target.closest('.calculator-row');
-            const selected = e.target.selectedOptions[0];
-            const otcPrice = parseFloat(selected.dataset.price) || 0;
-            
-            row.querySelector('.otc-value').value = otcPrice;
-            row.querySelector('.otc-display').textContent = formatCurrency(otcPrice);
-            updateRow(row);
-        }
+    });
+
+    // Reset product selection when category changes
+    productSelect.value = '';
+    row.querySelector('.price-value').value = 0;
+    row.querySelector('.price-display').textContent = formatCurrency(0);
+    updateRow(row);
+}
+
         
         if (e.target.classList.contains('category-select')) {
             const row = e.target.closest('.calculator-row');

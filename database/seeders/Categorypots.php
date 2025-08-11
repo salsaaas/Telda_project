@@ -2,7 +2,8 @@
 namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\Category;
-class CategorySeeder extends Seeder
+
+class CategorypotsSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -14,7 +15,7 @@ class CategorySeeder extends Seeder
             ['nama_category' => 'ADDON'],
         ];
         foreach ($categories as $category) {
-            Category::create($category);
+            Categorypots::create($category);
         }
     }
 }
