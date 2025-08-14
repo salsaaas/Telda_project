@@ -44,26 +44,17 @@
                     <tbody id="calculatorRows">
                         <tr class="calculator-row">
                             <td>
-                            <select name="items[0][category_id]" class="form-select" required>
-                        @foreach($categories as $category)
-                            <option value="{{ $category->id }}">{{ $category->nama_category }}</option>
-                        @endforeach
-                    </select>
+                                <select name="items[0][category_id]" class="form-select category-select" required>
+                                    @foreach($categories as $category)
+                                        <option value="{{ $category->category_id }}" data-name="{{ $category->nama_category }}">
+                                            {{ $category->nama_category }}
+                                        </option>
+                                    @endforeach
                                 </select>
                             </td>
                             <td>
-                                <select name="items[0][product_id]" class="form-select product-select" required>
-                                    <option value="">-</option>
-                                    @foreach($products as $product)
-                                    <option value="{{ $product->id }}" 
-                                            data-price="{{ $product->price }}" 
-                                            data-category="{{ $product->category_id }}"
-                                            data-name="{{ $product->nama_product }}">
-                                        {{ $product->nama_product }}
-                                    </option>
-                                @endforeach
-
-                                </select>
+                                {{-- Product di-load via AJAX Select2 --}}
+                                <select name="items[0][product_id]" class="form-select product-select" required></select>
                             </td>
                             <td>
                                 <select name="items[0][otc_category]" class="form-select otc-select" required>
@@ -80,22 +71,11 @@
                                 <span class="otc-display">Rp 0</span>
                                 <input type="hidden" name="items[0][otc]" class="otc-value" value="0">
                             </td>
-                            <td>
-                                <span class="price-with-ppn text-primary">Rp 0</span>
-                            </td>
-                            <td>
-                                <input type="number" name="items[0][duration]" class="form-control duration-input" 
-                                       min="1" value="1" required style="width: 80px;">
-                            </td>
-                            <td>
-                                <span class="price-duration text-info">Rp 0</span>
-                            </td>
-                            <td>
-                                <span class="final-price-no-ppn text-warning">Rp 0</span>
-                            </td>
-                            <td>
-                                <span class="final-price text-success">Rp 0</span>
-                            </td>
+                            <td><span class="price-with-ppn text-primary">Rp 0</span></td>
+                            <td><input type="number" name="items[0][duration]" class="form-control duration-input" min="1" value="1" required style="width: 80px;"></td>
+                            <td><span class="price-duration text-info">Rp 0</span></td>
+                            <td><span class="final-price-no-ppn text-warning">Rp 0</span></td>
+                            <td><span class="final-price text-success">Rp 0</span></td>
                             <td>
                                 <button type="button" class="btn btn-danger btn-sm remove-row">
                                     <i class="fas fa-trash"></i>
@@ -125,31 +105,23 @@
     </div>
 </div>
 
+{{-- TEMPLATE ROW --}}
 <template id="row-template">
     <tr class="calculator-row">
         <td>
-        <select name="items[0][category_id]" class="form-select" required>
-    @foreach($categories as $category)
-        <option value="{{ $category->id }}">{{ $category->nama_category }}</option>
-    @endforeach
-</select>
-
-        </td>
-        <td>
-            <select name="items[][product_id]" class="form-select product-select" required>
-                <option value="">-</option>
-                @foreach($products as $product)
-                    <option value="{{ $product->id }}" 
-                            data-price="{{ $product->price }}" 
-                            data-category="{{ $product->category_id }}"
-                            data-name="{{ $product->nama_product }}">
-                        {{ $product->nama_product }}
+            <select name="items[0][category_id]" class="form-select category-select" required>
+                @foreach($categories as $category)
+                    <option value="{{ $category->category_id }}" data-name="{{ $category->nama_category }}">
+                        {{ $category->nama_category }}
                     </option>
                 @endforeach
             </select>
         </td>
         <td>
-            <select name="items[][otc_category]" class="form-select otc-select" required>
+            <select name="items[0][product_id]" class="form-select product-select" required></select>
+        </td>
+        <td>
+            <select name="items[0][otc_category]" class="form-select otc-select" required>
                 <option value="FREE/MO" data-price="0">FREE/MO</option>
                 <option value="AO DISCOUNT" data-price="150000">AO DISCOUNT</option>
                 <option value="AO NORMAL" data-price="500000">AO NORMAL</option>
@@ -157,28 +129,17 @@
         </td>
         <td>
             <span class="price-display">Rp 0</span>
-            <input type="hidden" name="items[][price]" class="price-value" value="0">
+            <input type="hidden" name="items[0][price]" class="price-value" value="0">
         </td>
         <td>
             <span class="otc-display">Rp 0</span>
-            <input type="hidden" name="items[][otc]" class="otc-value" value="0">
+            <input type="hidden" name="items[0][otc]" class="otc-value" value="0">
         </td>
-        <td>
-            <span class="price-with-ppn text-primary">Rp 0</span>
-        </td>
-        <td>
-            <input type="number" name="items[][duration]" class="form-control duration-input" 
-                   min="1" value="1" required style="width: 80px;">
-        </td>
-        <td>
-            <span class="price-duration text-info">Rp 0</span>
-        </td>
-        <td>
-            <span class="final-price-no-ppn text-warning">Rp 0</span>
-        </td>
-        <td>
-            <span class="final-price text-success">Rp 0</span>
-        </td>
+        <td><span class="price-with-ppn text-primary">Rp 0</span></td>
+        <td><input type="number" name="items[0][duration]" class="form-control duration-input" min="1" value="1" required style="width: 80px;"></td>
+        <td><span class="price-duration text-info">Rp 0</span></td>
+        <td><span class="final-price-no-ppn text-warning">Rp 0</span></td>
+        <td><span class="final-price text-success">Rp 0</span></td>
         <td>
             <button type="button" class="btn btn-danger btn-sm remove-row">
                 <i class="fas fa-trash"></i>
@@ -191,172 +152,162 @@
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    let rowIndex = 1;
+    const fmt = n => 'Rp ' + new Intl.NumberFormat('id-ID').format(Math.round(n || 0));
+    const ppn = x => x * 1.11;
 
-    function formatCurrency(amount) {
-        return 'Rp ' + new Intl.NumberFormat('id-ID').format(Math.round(amount));
-    }
+    function initSelect2ForRow(row) {
+        const $row = $(row);
+        const $category = $row.find('.category-select');
+        const $product  = $row.find('.product-select');
 
-    function calculatePPN(price) {
-        return price * 1.11;
+        // aman: destroy hanya jika sudah terpasang
+        if ($product.data('select2')) { $product.select2('destroy'); }
+
+        $product.select2({
+            width: '100%',
+            placeholder: '-',
+            allowClear: true,
+            minimumInputLength: 0,    // bisa tampil tanpa mengetik
+            ajax: {
+                url: '{{ route("potproducts.byCategory") }}',
+                delay: 0,
+                cache: false,
+                data: function (params) {
+                    return {
+                        category_id: $category.val() || '',
+                        q: params.term || ''
+                    };
+                },
+                processResults: function (data) {
+                    return {
+                        results: (data || []).map(item => ({
+                            id: item.id,
+                            text: item.text,
+                            price: item.price ?? 0
+                        }))
+                    };
+                }
+            }
+        });
+
+        // saat dropdown dibuka, trigger query kosong agar list awal muncul
+        $product.on('select2:open', function () {
+            if (!$category.val()) return; // kalau kategori kosong, jangan fetch
+            const s2 = $product.data('select2');
+            if (s2) { s2.trigger('query', { term: '' }); }
+        });
+
+        // reset saat kategori berubah
+        $category.off('change.s2').on('change.s2', function () {
+            $product.val(null).trigger('change');
+            $product.empty().trigger('change');
+            const rowEl = $row.get(0);
+            rowEl.querySelector('.price-value').value = 0;
+            rowEl.querySelector('.price-display').textContent = fmt(0);
+            updateRow(rowEl);
+        });
+
+        // set price saat pilih/clear
+        $product.off('select2:select.s2 clear.s2')
+            .on('select2:select.s2', function (e) {
+                const data = e.params.data;
+                const rowEl = $row.get(0);
+                const price = parseFloat(data.price || 0);
+                rowEl.querySelector('.price-value').value = price;
+                rowEl.querySelector('.price-display').textContent = fmt(price);
+                updateRow(rowEl);
+            })
+            .on('select2:clear.s2', function () {
+                const rowEl = $row.get(0);
+                rowEl.querySelector('.price-value').value = 0;
+                rowEl.querySelector('.price-display').textContent = fmt(0);
+                updateRow(rowEl);
+            });
     }
 
     function updateRow(row) {
-        const price = parseFloat(row.querySelector('.price-value').value) || 0;
-        const otc = parseFloat(row.querySelector('.otc-value').value) || 0;
+        const price    = parseFloat(row.querySelector('.price-value').value) || 0;
+        const otc      = parseFloat(row.querySelector('.otc-value').value) || 0;
         const duration = parseInt(row.querySelector('.duration-input').value) || 1;
-        
-        const priceWithPPN = calculatePPN(price); 
+
+        const priceWithPPN  = ppn(price);
         const priceDuration = priceWithPPN * duration;
-        const finalPriceNoPPN = (price * duration) + otc; 
-        const finalPrice = priceDuration + (otc * 1.11);
-        
-        row.querySelector('.price-with-ppn').textContent = formatCurrency(priceWithPPN);
-        row.querySelector('.price-duration').textContent = formatCurrency(priceDuration);
-        row.querySelector('.final-price-no-ppn').textContent = formatCurrency(finalPriceNoPPN);
-        row.querySelector('.final-price').textContent = formatCurrency(finalPrice);
-        
+        const finalNoPPN    = (price * duration) + otc;
+        const finalPrice    = priceDuration + ppn(otc);
+
+        row.querySelector('.price-with-ppn').textContent     = fmt(priceWithPPN);
+        row.querySelector('.price-duration').textContent     = fmt(priceDuration);
+        row.querySelector('.final-price-no-ppn').textContent = fmt(finalNoPPN);
+        row.querySelector('.final-price').textContent        = fmt(finalPrice);
+
         updateGrandTotal();
     }
 
     function updateGrandTotal() {
         let total = 0;
         document.querySelectorAll('.calculator-row').forEach(row => {
-            const price = parseFloat(row.querySelector('.price-value').value) || 0;
-            const otc = parseFloat(row.querySelector('.otc-value').value) || 0;
+            const price    = parseFloat(row.querySelector('.price-value').value) || 0;
+            const otc      = parseFloat(row.querySelector('.otc-value').value) || 0;
             const duration = parseInt(row.querySelector('.duration-input').value) || 1;
-            
-            // Hanya hitung jika ada price yang dipilih (bukan 0)
             if (price > 0) {
-                const priceWithPPN = calculatePPN(price);
-                const priceDuration = priceWithPPN * duration;
-                const finalPrice = priceDuration + (otc * 1.11);
-                total += finalPrice;
+                total += ppn(price) * duration + ppn(otc);
             }
         });
-        
-        document.getElementById('grandTotal').textContent = formatCurrency(total);
+        document.getElementById('grandTotal').textContent = fmt(total);
     }
 
-    function updateRowIndices() {
-    document.querySelectorAll('.calculator-row').forEach((row, index) => {
-        row.querySelectorAll('select, input').forEach(field => {
-            if (field.name) {
-                const newName = field.name.replace(/\[\d*\]/, `[${index}]`);
-                field.name = newName;
-            }
-        });
-    });
-}
-
-
-    function validateForm() {
-        const title = document.getElementById('calculationTitle').value.trim();
-        if (!title) {
-            alert('Silakan masukkan judul kalkulasi terlebih dahulu!');
-            return false;
-        }
-
-        const rows = document.querySelectorAll('.calculator-row');
-        for (let row of rows) {
-            const categorySelect = row.querySelector('.category-select');
-            const productSelect = row.querySelector('.product-select');
-            
-            if (!categorySelect.value || !productSelect.value) {
-                alert('Pastikan semua baris telah dipilih kategori dan produknya!');
-                return false;
-            }
-        }
-        return true;
-    }
-
-    function collectFormData() {
-        const title = document.getElementById('calculationTitle').value.trim();
-        const items = [];
-        
-        document.querySelectorAll('.calculator-row').forEach(row => {
-            const categorySelect = row.querySelector('.category-select');
-            const productSelect = row.querySelector('.product-select');
-            const otcSelect = row.querySelector('.otc-select');
-            
-            const categoryOption = categorySelect.selectedOptions[0];
-            const productOption = productSelect.selectedOptions[0];
-            
-            items.push({
-                category_name: categoryOption ? categoryOption.dataset.name : '',
-                product_name: productOption ? productOption.dataset.name : '',
-                otc_category: otcSelect.value,
-                price: parseFloat(row.querySelector('.price-value').value) || 0,
-                otc: parseFloat(row.querySelector('.otc-value').value) || 0,
-                duration: parseInt(row.querySelector('.duration-input').value) || 1
+    function renumberRows() {
+        document.querySelectorAll('.calculator-row').forEach((row, idx) => {
+            row.querySelectorAll('select[name], input[name]').forEach(field => {
+                field.name = field.name.replace(/\[\d+\]/, `[${idx}]`);
             });
         });
-        
-        return { title, items };
     }
 
-    document.addEventListener('change', function(e) {
-        if (e.target.classList.contains('category-select')) {
-    const row = e.target.closest('.calculator-row');
-    const categoryId = e.target.value;
-    const productSelect = row.querySelector('.product-select');
-    
-    Array.from(productSelect.options).forEach(option => {
-        if (option.value === '') {
-            option.style.display = 'block';
-        } else {
-            option.style.display = option.dataset.category === categoryId ? 'block' : 'none';
-        }
-    });
-
-    // Reset product selection when category changes
-    productSelect.value = '';
-    row.querySelector('.price-value').value = 0;
-    row.querySelector('.price-display').textContent = formatCurrency(0);
-    updateRow(row);
-}
-
-        
-        if (e.target.classList.contains('category-select')) {
-            const row = e.target.closest('.calculator-row');
-            const categoryId = e.target.value;
-            const productSelect = row.querySelector('.product-select');
-            
-            // Filter products by category
-            Array.from(productSelect.options).forEach(option => {
-                if (option.value === '') {
-                    option.style.display = 'block';
-                } else {
-                    option.style.display = option.dataset.category === categoryId ? 'block' : 'none';
-                }
-            });
-            
-            productSelect.value = '';
-            row.querySelector('.price-value').value = 0;
-            row.querySelector('.price-display').textContent = formatCurrency(0);
-            updateRow(row);
-        }
-    });
-
+    // Durasi & OTC input
     document.addEventListener('input', function(e) {
         if (e.target.classList.contains('duration-input')) {
+            updateRow(e.target.closest('.calculator-row'));
+        }
+    });
+    document.addEventListener('change', function(e) {
+        if (e.target.classList.contains('otc-select')) {
             const row = e.target.closest('.calculator-row');
+            const otc = parseFloat(e.target.selectedOptions[0].dataset.price || 0);
+            row.querySelector('.otc-value').value = otc;
+            row.querySelector('.otc-display').textContent = fmt(otc);
             updateRow(row);
         }
     });
 
+    // Tambah baris (init Select2 HANYA baris baru)
     document.getElementById('addRow').addEventListener('click', function() {
-        const template = document.querySelector('#row-template').content.cloneNode(true);
-        document.getElementById('calculatorRows').appendChild(template);
-        updateRowIndices();
+        const frag = document.querySelector('#row-template').content.cloneNode(true);
+        const newRow = frag.querySelector('tr.calculator-row');  // ambil tr dari template
+
+        // (opsional) copy kategori dari baris terakhir biar enak
+        const lastCat = document.querySelector('#calculatorRows .calculator-row:last-child .category-select');
+        if (lastCat && newRow.querySelector('.category-select')) {
+            newRow.querySelector('.category-select').value = lastCat.value;
+        }
+
+        document.getElementById('calculatorRows').appendChild(frag);
+        const appendedRow = document.querySelector('#calculatorRows .calculator-row:last-child');
+
+        renumberRows();
+        initSelect2ForRow(appendedRow);   // << WAJIB
     });
 
+    // Hapus baris
     document.addEventListener('click', function(e) {
         if (e.target.closest('.remove-row')) {
             const row = e.target.closest('.calculator-row');
-            if (document.querySelectorAll('.calculator-row').length > 1) {
+            const rows = document.querySelectorAll('.calculator-row');
+            if (rows.length > 1) {
+                const $prod = $(row).find('.product-select');
+                if ($prod.data('select2')) { $prod.select2('destroy'); }
                 row.remove();
-                updateRowIndices();
+                renumberRows();
                 updateGrandTotal();
             } else {
                 alert('Minimal satu baris wajib ada.');
@@ -364,78 +315,30 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Reset button
+    // Reset form
     document.getElementById('resetBtn').addEventListener('click', function() {
-        if (confirm('Apakah Anda yakin ingin reset semua data?')) {
-            document.getElementById('calculatorForm').reset();
-            document.getElementById('calculationTitle').value = '';
-            
-            // Reset semua nilai ke 0 dan update tampilan
-            document.querySelectorAll('.calculator-row').forEach(row => {
-                row.querySelector('.price-value').value = 0;
-                row.querySelector('.otc-value').value = 0;
-                row.querySelector('.price-display').textContent = formatCurrency(0);
-                row.querySelector('.otc-display').textContent = formatCurrency(0);
-                row.querySelector('.price-with-ppn').textContent = formatCurrency(0);
-                row.querySelector('.price-duration').textContent = formatCurrency(0);
-                row.querySelector('.final-price-no-ppn').textContent = formatCurrency(0);
-                row.querySelector('.final-price').textContent = formatCurrency(0);
-                row.querySelector('.duration-input').value = 1;
-                
-                // Reset dropdown ke nilai default
-                row.querySelector('.category-select').value = '';
-                row.querySelector('.product-select').value = '';
-                row.querySelector('.otc-select').value = 'FREE/MO';
-            });
-            
-            // Update grand total setelah reset
-            updateGrandTotal();
-        }
-    });
+        if (!confirm('Apakah Anda yakin ingin reset semua data?')) return;
 
-    // Print PDF button
-    document.getElementById('printPdfBtn').addEventListener('click', function() {
-        if (!validateForm()) {
-            return;
-        }
-
-        const formData = collectFormData();
-        
-        // Create a temporary form to submit to PDF endpoint
-        const form = document.createElement('form');
-        form.method = 'POST';
-        form.action = '/calculator/print-pdf';
-        form.style.display = 'none';
-        
-        // Add CSRF token
-        const csrfInput = document.createElement('input');
-        csrfInput.type = 'hidden';
-        csrfInput.name = '_token';
-        csrfInput.value = document.querySelector('input[name="_token"]').value;
-        form.appendChild(csrfInput);
-        
-        // Add title
-        const titleInput = document.createElement('input');
-        titleInput.type = 'hidden';
-        titleInput.name = 'title';
-        titleInput.value = formData.title;
-        form.appendChild(titleInput);
-        
-        // Add items
-        formData.items.forEach((item, index) => {
-            Object.keys(item).forEach(key => {
-                const input = document.createElement('input');
-                input.type = 'hidden';
-                input.name = items[${index}][${key}];
-                input.value = item[key];
-                form.appendChild(input);
-            });
+        // reset semua baris ke default (tanpa hapus)
+        document.querySelectorAll('.calculator-row').forEach(row => {
+            const $prod = $(row).find('.product-select');
+            $prod.val(null).trigger('change');
+            row.querySelector('.price-value').value = 0;
+            row.querySelector('.otc-value').value = 0;
+            row.querySelector('.price-display').textContent = fmt(0);
+            row.querySelector('.otc-display').textContent = fmt(0);
+            row.querySelector('.price-with-ppn').textContent = fmt(0);
+            row.querySelector('.price-duration').textContent = fmt(0);
+            row.querySelector('.final-price-no-ppn').textContent = fmt(0);
+            row.querySelector('.final-price').textContent = fmt(0);
+            row.querySelector('.duration-input').value = 1;
+            row.querySelector('.otc-select').value = 'FREE/MO';
         });
-        
-        document.body.appendChild(form);
-        form.submit();
-        document.body.removeChild(form);
+        updateGrandTotal();
     });
+
+    // Init baris pertama
+    initSelect2ForRow(document.querySelector('.calculator-row'));
 });
 </script>
 @endpush

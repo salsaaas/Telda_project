@@ -5,12 +5,16 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void {
         Schema::create('products', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('category_id')->constrained('categories', 'category_id')->cascadeOnDelete();
-            $table->string('nama_product');
-            $table->decimal('price', 12, 2);
-            $table->timestamps();
-        });
+    $table->bigIncrements('id');
+    $table->unsignedBigInteger('category_id');
+    $table->string('nama_product');
+    $table->unsignedBigInteger('price');
+    $table->timestamps();
+
+    $table->foreign('category_id')
+          ->references('category_id')->on('categories')
+          ->cascadeOnDelete();
+});
     }
     public function down(): void {
         Schema::dropIfExists('products');
