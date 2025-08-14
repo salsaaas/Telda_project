@@ -4,15 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Schema;
 
 class Productpots extends Model
 {
     use HasFactory;
 
-    // PENTING: gunakan tabel pots (ganti sesuai nama tabel kamu)
-    protected $table = 'productpots'; // <- sebelumnya 'products'
-
-    protected $primaryKey = 'id';
+    // Tabel & PK
+    protected $table = 'productpots';
+    protected $primaryKey = 'id';       // GANTI ke 'product_id' kalau di migration PK-nya product_id
     public $incrementing = true;
     protected $keyType = 'int';
 
@@ -20,27 +20,41 @@ class Productpots extends Model
         'category_id',
         'nama_product',
         'price',
-        // tambahkan kolom lain bila ada, mis. 'is_active'
+        // tambahkan kolom lain bila ada (mis. is_active)
     ];
 
+    // Simpan rupiah sebagai integer (tanpa desimal)
     protected $casts = [
-        'price' => 'decimal:2',
+        'price' => 'integer', // pakai 'decimal:2' jika kamu simpan angka dengan koma
     ];
 
-    // ---------- RELATIONS ----------
+    /* ===========================
+     * RELATIONS
+     * =========================== */
+
+    // -> ke tabel categorypots (bukan categories)
     public function category()
     {
-        // categories: PK = category_id (sesuai validasi exists:categories,category_id)
-        return $this->belongsTo(Category::class, 'category_id', 'category_id');
+        return $this->belongsTo(Categorypots::class, 'category_id', 'category_id');
     }
 
+    // Pivot OTC.
+    // Pastikan nama tabel & kolom sesuai migration pivot-mu.
+    // Rekomendasi pivot: productpots_otc(product_id, otc_id)
     public function otcs()
     {
-        // Pivot default: product_otc(product_id, otc_id)
-        return $this->belongsToMany(OTC::class, 'product_otc', 'product_id', 'otc_id');
+        return $this->belongsToMany(
+            OTC::class,       // model tujuan
+            'productpots_otc',// NAMA TABEL PIVOT (ubah jika kamu pakai nama lain)
+            'product_id',     // FK ke productpots.id (ubah jika PK kamu berbeda)
+            'otc_id'          // FK ke otcs.id
+        );
     }
 
-    // ---------- SCOPES (untuk query bersih di controller) ----------
+    /* ===========================
+     * SCOPES
+     * =========================== */
+
     public function scopeForCategory($query, $categoryId)
     {
         return $query->where('category_id', $categoryId);
@@ -56,17 +70,20 @@ class Productpots extends Model
 
     public function scopeActive($query)
     {
-        // pakai jika ada kolom is_active di tabel
-        if (schema_has_column($this->getTable(), 'is_active')) {
+        // Hanya filter jika kolom is_active memang ada
+        if (Schema::hasColumn($this->getTable(), 'is_active')) {
             $query->where('is_active', 1);
         }
         return $query;
     }
 
-    // ---------- BUSINESS LOGIC ----------
+    /* ===========================
+     * BUSINESS LOGIC
+     * =========================== */
+
     /**
-     * Hitung total harga: ((harga + ppn) x durasi) + (otc x durasi)
-     * Return: float (angka), null jika OTC tidak ditemukan
+     * Hitung total: (price * (1 + ppn) * duration) + (otc * duration)
+     * Return float/null bila OTC tidak ketemu.
      */
     public function calculateTotalPrice($otcId, int $duration = 1, float $ppnRate = 0.11): ?float
     {
@@ -75,9 +92,9 @@ class Productpots extends Model
             return null;
         }
 
-        $productPriceWithPPN = (float)$this->price * (1 + $ppnRate);
+        $productPriceWithPPN = (float) $this->price * (1 + $ppnRate);
         $priceWithDuration   = $productPriceWithPPN * $duration;
-        $otcWithDuration     = (float)$otc->price_OTC * $duration;
+        $otcWithDuration     = (float) $otc->price_OTC * $duration;
 
         return $priceWithDuration + $otcWithDuration;
     }

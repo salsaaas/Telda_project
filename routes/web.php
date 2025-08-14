@@ -6,24 +6,12 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
 
-use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\ProductController;   // Non-Pots
-use App\Http\Controllers\OTCController;
-use App\Http\Controllers\NonpotsController;
-use App\Http\Controllers\PotsController;      // Pots
-
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-| Catatan:
-| - products.byCategory     -> Non-Pots (ProductController)
-| - potproducts.byCategory  -> Pots (PotsController, query ke products tapi filter kategori)
-| - Halaman Non-Pots & Pots dilindungi auth.
-*/
+use App\Http\Controllers\ProductController;   // Non-Pots (AJAX)
+use App\Http\Controllers\NonpotsController;  // Halaman Non-Pots
+use App\Http\Controllers\PotsController;     // Halaman Pots
 
 // ===============================
-// Public (guest) - Auth Pages
+// Guest-only (halaman auth)
 // ===============================
 Route::middleware('guest')->group(function () {
     // Register
@@ -36,15 +24,16 @@ Route::middleware('guest')->group(function () {
 });
 
 // ===============================
-// Public - AJAX JSON
+// Public - Endpoints AJAX (JSON)
 // ===============================
 
-// Non-Pots: filter produk per kategori
+// Non-Pots: produk per kategori (Select2 / dropdown)
 Route::get('/products/by-category', [ProductController::class, 'byCategory'])
     ->name('products.byCategory');
 
-// Legacy (opsional) Non-Pots: produk by {categoryId}
+// (Opsional/legacy) Non-Pots: produk by {categoryId}
 Route::get('/products/category/{categoryId}', [ProductController::class, 'getByCategory'])
+    ->whereNumber('categoryId')
     ->name('products.getByCategory');
 
 // POTS: endpoint Select2 khusus halaman Pots
@@ -52,7 +41,7 @@ Route::get('/pot-products/by-category', [PotsController::class, 'productsByCateg
     ->name('potproducts.byCategory');
 
 // ===============================
-// Protected (auth required)
+// Protected pages (wajib login)
 // ===============================
 Route::middleware('auth')->group(function () {
 
@@ -63,18 +52,21 @@ Route::middleware('auth')->group(function () {
 
     // Pots pages
     Route::get('/pots', [PotsController::class, 'index'])->name('pots.index');
-    Route::post('/pots', [PotsController::class, 'store'])->name('pots.store');                   // jika dipakai
-    Route::post('/pots/print-pdf', [PotsController::class, 'printPdf'])->name('pots.print-pdf'); // jika dipakai
+    Route::post('/pots', [PotsController::class, 'store'])->name('pots.store');
+    Route::post('/pots/print-pdf', [PotsController::class, 'printPdf'])->name('pots.print-pdf');
 
     // Logout
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 });
 
 // ===============================
-// Redirect Root
+// Redirect root
 // ===============================
 Route::get('/', function () {
     return Auth::check()
         ? redirect()->route('nonpots.index')
         : redirect()->route('login');
 });
+
+// (Opsional) fallback 404
+// Route::fallback(fn () => abort(404));

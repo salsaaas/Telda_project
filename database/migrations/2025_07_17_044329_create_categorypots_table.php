@@ -8,15 +8,15 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('categories', function (Blueprint $table) {
-            $table->bigIncrements('category_id');       // PK bigint unsigned AUTO_INCREMENT
-            $table->string('nama_category')->unique();  // cegah duplikat nama kategori
+        Schema::create('categorypots', function (Blueprint $table) {
+            $table->bigIncrements('category_id');
+            $table->string('nama_category')->unique();
             $table->timestamps();
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('categories');
+        Schema::dropIfExists('categorypots');
     }
 };

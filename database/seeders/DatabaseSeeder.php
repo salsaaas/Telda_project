@@ -1,29 +1,38 @@
 <?php
+
 namespace Database\Seeders;
 
-use App\Models\User;
 use Illuminate\Database\Seeder;
+// (opsional) import eksplisit supaya IDE gampang auto-complete
+use Database\Seeders\CategorySeeder;
+use Database\Seeders\CategoryPotsSeeder;
+use Database\Seeders\NonPotsProductSeeder;
+use Database\Seeders\PotsProductSeeder;
+use Database\Seeders\OTCSeeder;
+// use Database\Seeders\ProductSeeder; // pakai ini HANYA jika NonPotsProductSeeder tidak dipakai
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
-        // Create test user
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        // (Opsional) seed user contoh — comment kalau tidak ada factory User
+        // \App\Models\User::factory()->create([
+        //     'name'  => 'Test User',
+        //     'email' => 'test@example.com',
+        // ]);
 
-        // Call seeders in correct order
         $this->call([
-            CategorySeeder::class,
-            ProductSeeder::class,
+            // 1) master kategori
+            CategorySeeder::class,        // tabel: categories
+            CategoryPotsSeeder::class,    // tabel: categorypots
+
+            // 2) produk
+            NonPotsProductSeeder::class,  // tabel: products  (pilih salah satu dengan ProductSeeder)
+            // ProductSeeder::class,       // <-- gunakan ini kalau NonPotsProductSeeder tidak digunakan
+            PotsProductSeeder::class,     // tabel: productpots
+
+            // 3) data lain yang bergantung pada produk (OTC/pivot)
             OTCSeeder::class,
-            POTSProductSeeder::class,
-            NonPotsProductSeeder::class,
         ]);
     }
 }

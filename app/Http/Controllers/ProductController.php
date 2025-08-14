@@ -22,7 +22,8 @@ class ProductController extends Controller
         $request->validate([
             'category_id'  => 'required|exists:categories,category_id',
             'nama_product' => 'required|string|max:255',
-            'price'        => 'required|numeric|min:0',
+            // kolom DB: unsignedBigInteger -> gunakan integer
+            'price'        => 'required|integer|min:0',
         ]);
 
         $product = Product::create($request->only('category_id', 'nama_product', 'price'));
@@ -52,7 +53,7 @@ class ProductController extends Controller
         $request->validate([
             'category_id'  => 'required|exists:categories,category_id',
             'nama_product' => 'required|string|max:255',
-            'price'        => 'required|numeric|min:0',
+            'price'        => 'required|integer|min:0',
         ]);
 
         $product->update($request->only('category_id', 'nama_product', 'price'));
@@ -82,62 +83,60 @@ class ProductController extends Controller
         }
 
         $request->validate([
-            'otc_id'   => 'required|exists:otc,id_OTC',
+            // SELARASKAN DENGAN MIGRASI OTC: asumsi tabel 'otcs' pk default 'id'
+            'otc_id'   => 'required|exists:otcs,id',
             'duration' => 'required|integer|min:1',
             'ppn_rate' => 'nullable|numeric|min:0|max:1',
         ]);
 
-        $totalPrice = $product->calculateTotalPrice(
+        $breakdown = $product->calculateTotalPrice(
             $request->otc_id,
-            $request->duration,
+            (int) $request->duration,
             $request->ppn_rate ?? 0.11
         );
 
-        if ($totalPrice === null) {
+        if ($breakdown === null) {
             return response()->json(['message' => 'Invalid OTC selected'], 400);
         }
 
+        // Product::calculateTotalPrice() mengembalikan array rincian
         return response()->json([
-            'product'     => $product->load('category'),
-            'otc_id'      => $request->otc_id,
-            'duration'    => $request->duration,
-            'ppn_rate'    => $request->ppn_rate ?? 0.11,
-            'total_price' => $totalPrice
+            'product'   => $product->load('category'),
+            'otc_id'    => (int) $request->otc_id,
+            'duration'  => (int) $request->duration,
+            'ppn_rate'  => (float) ($request->ppn_rate ?? 0.11),
+            'breakdown' => $breakdown,
+            'total'     => $breakdown['total_price'] ?? null,
         ]);
     }
 
     // =========================
-    // NEW: Endpoint ramah Select2
+    // Endpoint ramah Select2
     // GET /products/by-category?category_id=1&q=inet
-    // ATAU /products/by-category?category=INDIBIZ&q=inet
+    // ATAU ?category=INDIBIZ
     // =========================
     public function byCategory(Request $request)
     {
         $categoryId = $request->query('category_id');
-        $category   = $request->query('category'); // nama kategori (mis. INDIBIZ)
-        $search     = $request->query('q');
+        $category   = $request->query('category'); // nama kategori (mis. ASTINET)
+        $search     = trim((string) $request->query('q', ''));
 
         // Jika user kirim 'category' (nama), konversi ke category_id
         if (!$categoryId && $category) {
-            $categoryId = Category::where('nama_category', $category)  // sesuaikan kolom nama kategori
-                                  ->orWhere('category_name', $category) // fallback jika kolommu bernama lain
-                                  ->value('category_id');
+            $categoryId = Category::where('nama_category', $category)->value('category_id');
         }
 
-        $q = Product::query()->select('id', 'nama_product', 'category_id');
+        // SELECT unik per nama_product (ambil id terendah sebagai wakil)
+        $q = Product::query()
+            ->when($categoryId, fn($qq) => $qq->where('category_id', $categoryId))
+            ->when($search !== '', fn($qq) => $qq->where('nama_product', 'like', "%{$search}%"));
 
-        if ($categoryId) {
-            $q->where('category_id', $categoryId);
-        }
-
-        if (!empty($search)) {
-            $q->where('nama_product', 'like', "%{$search}%");
-        }
-
-        $items = $q->orderBy('nama_product')
-                   ->distinct('nama_product') // ANTI-DOBEL
-                   ->get()
-                   ->map(fn($p) => ['id' => $p->id, 'text' => $p->nama_product]);
+        $items = $q->selectRaw('MIN(id) as id, nama_product')
+            ->groupBy('nama_product')
+            ->orderBy('nama_product')
+            ->limit(100)
+            ->get()
+            ->map(fn($p) => ['id' => (int) $p->id, 'text' => $p->nama_product]);
 
         return response()->json($items);
     }
@@ -148,7 +147,6 @@ class ProductController extends Controller
     // =========================
     public function getByCategory(Request $request, $categoryId = null)
     {
-        // dukung dua cara: path param {categoryId} atau query ?category_id=
         $categoryId = $categoryId ?? $request->query('category_id');
 
         $products = Product::with(['category', 'otcs'])
