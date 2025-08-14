@@ -160,12 +160,4 @@ class ProductController extends Controller
 
     return response()->json($products);
 }
-    }
-
-            ->when($categoryId, fn($q) => $q->where('category_id', $categoryId))
-            ->orderBy('nama_product')
-            ->get();
-
-        return response()->json($products);
-    }
 }
