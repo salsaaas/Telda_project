@@ -89,9 +89,11 @@ class ProductController extends Controller
     {
         $categoryId = $request->query('category');
         $products = Product::with(['category', 'otcs'])
-            ->where('category_id', $categoryId)
-            ->get();
-            
-        return response()->json($products);
-    }
+        ->when($categoryId, function ($query) use ($categoryId) {
+            $query->where('category_id', $categoryId);
+        })
+        ->get();
+
+    return response()->json($products);
 }
+    }
