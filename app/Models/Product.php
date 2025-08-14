@@ -1,80 +1,47 @@
 <?php
-
 namespace App\Models;
-
+use App\Models\OTC;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Category;
-use App\Models\OTC;
-
 class Product extends Model
 {
     use HasFactory;
-
     protected $table = 'products';
     protected $primaryKey = 'id';
     public $incrementing = true;
     protected $keyType = 'int';
-
     protected $fillable = [
         'category_id',
         'nama_product',
-        'price',
+        'price'
     ];
-
-    // Kolom `price` di migration = unsignedBigInteger,
-    // jadi cast ke integer (atau float kalau ingin pecahan).
     protected $casts = [
-        'id'          => 'integer',
-        'category_id' => 'integer',
-        'price'       => 'integer', // ganti ke 'float' jika butuh desimal
+        'price' => 'decimal:2'
     ];
-
-    // ---------- RELATIONS ----------
     public function category()
     {
-        // PK categories = category_id
         return $this->belongsTo(Category::class, 'category_id', 'category_id');
     }
-
     public function otcs()
     {
-        // Pivot default: product_otc(product_id, otc_id)
         return $this->belongsToMany(OTC::class, 'product_otc', 'product_id', 'otc_id');
     }
-
-    // ---------- BUSINESS LOGIC ----------
-    /**
-     * Hitung total: ((harga + PPN) x durasi) + (OTC x durasi)
-     *
-     * @param  int   $otcId
-     * @param  int   $duration  minimal 1
-     * @param  float $ppnRate   0.11 = 11%
-     * @return array{
-     *   price_with_ppn: float,
-     *   price_duration: float,
-     *   otc_duration:   float,
-     *   total_price:    float
-     * }
-     */
-    public function calculateTotalPrice(int $otcId, int $duration = 1, float $ppnRate = 0.11): array
+    // Method eksplisit sesuai logika ((harga + ppn) x durasi) + (otc x durasi)
+    public function calculateTotalPrice($otcId, $duration = 1, $ppnRate = 0.11)
     {
-        $duration = max(1, $duration);
-
         $otc = OTC::find($otcId);
-        $otcPrice = $otc?->price_OTC ?? 0;
-
-        $base            = (float) $this->price;
-        $priceWithPPN    = $base * (1 + $ppnRate);
-        $priceDuration   = $priceWithPPN * $duration;
-        $otcDuration     = (float) $otcPrice * $duration;
-        $total           = $priceDuration + $otcDuration;
-
+        if (!$otc) {
+            return null;
+        }
+        $productPriceWithPPN = $this->price * (1 + $ppnRate);
+        $priceWithDuration = $productPriceWithPPN * $duration;
+        $otcWithDuration = $otc->price_OTC * $duration;
+        $totalPrice = $priceWithDuration + $otcWithDuration;
         return [
-            'price_with_ppn' => $priceWithPPN,
-            'price_duration' => $priceDuration,
-            'otc_duration'   => $otcDuration,
-            'total_price'    => $total,
+            'price_with_ppn' => $productPriceWithPPN,
+            'price_duration' => $priceWithDuration,
+            'otc_duration' => $otcWithDuration,
+            'total_price' => $totalPrice
         ];
     }
 }

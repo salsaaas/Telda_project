@@ -7,6 +7,7 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
+
 {
     // =========================
     // CRUD & utility existing
@@ -150,10 +151,11 @@ class ProductController extends Controller
         $categoryId = $categoryId ?? $request->query('category_id');
 
         $products = Product::with(['category', 'otcs'])
-            ->when($categoryId, fn($q) => $q->where('category_id', $categoryId))
-            ->orderBy('nama_product')
-            ->get();
+        ->when($categoryId, function ($query) use ($categoryId) {
+            $query->where('category_id', $categoryId);
+        })
+        ->get();
 
-        return response()->json($products);
-    }
+    return response()->json($products);
+}
 }
