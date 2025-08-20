@@ -9,7 +9,9 @@ class Categorypots extends Model
     protected $primaryKey = 'category_id';
     public $incrementing = true;
     protected $keyType = 'int';
+    
     protected $fillable = ['nama_category'];
+
     public function products()
     {
         return $this->hasMany(Product::class, 'category_id', 'category_id');

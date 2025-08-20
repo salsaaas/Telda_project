@@ -142,232 +142,233 @@
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', () => {
+  // ---------- Utils ----------
+  const PPN = 0.11;                               // 11%
+  const fmt = n => 'Rp ' + new Intl.NumberFormat('id-ID').format(Math.round(n || 0));
+  const withPPN = x => x * (1 + PPN);
+  const toPct = v => Math.min(100, Math.max(0, Number(v) || 0)) / 100;
 
-    // ---------- Utils ----------
-    const fmt = n => 'Rp ' + new Intl.NumberFormat('id-ID').format(Math.round(n || 0));
-    const withPPN = x => x * 1.11;
-    const toPct = v => Math.min(100, Math.max(0, Number(v) || 0)) / 100;
+  function resetRow(row) {
+    row.querySelectorAll('input[type="number"]').forEach(i => {
+      if (i.classList.contains('qty-input') || i.classList.contains('duration-input')) i.value = 1;
+      else i.value = 0;
+    });
+    row.querySelectorAll('input[type="hidden"]').forEach(i => i.value = 0);
+    row.querySelectorAll('select').forEach(s => s.selectedIndex = 0);
+    row.querySelectorAll('.price-display,.otc-display,.price-times-discount,.otc-times-discount,.monthly-otc,.monthly-price,.monthly-price-ppn,.yearly-price,.final-price-ppn')
+      .forEach(el => el.textContent = fmt(0));
+  }
 
-    function resetRow(row) {
-        // reset input nilai
-        row.querySelectorAll('input[type="number"]').forEach(i => {
-            if (i.classList.contains('qty-input') || i.classList.contains('duration-input')) i.value = 1;
-            else i.value = 0;
-        });
-        row.querySelectorAll('input[type="hidden"]').forEach(i => i.value = 0);
-        // reset select
-        row.querySelectorAll('select').forEach(s => s.selectedIndex = 0);
-        // reset display
-        row.querySelectorAll('.price-display,.otc-display,.price-times-discount,.otc-times-discount,.monthly-otc,.monthly-price,.monthly-price-ppn,.yearly-price,.final-price-ppn')
-           .forEach(el => el.textContent = fmt(0));
-    }
+  function renumberRows() {
+    document.querySelectorAll('#calculatorRows .calculator-row').forEach((tr, idx) => {
+      tr.querySelectorAll('select[name], input[name]').forEach(el => {
+        el.name = el.name.replace(/\[\d+\]/, `[${idx}]`);
+      });
+    });
+  }
 
-    function renumberRows() {
-        document.querySelectorAll('#calculatorRows .calculator-row').forEach((tr, idx) => {
-            tr.querySelectorAll('select[name], input[name]').forEach(el => {
-                el.name = el.name.replace(/\[\d+\]/, `[${idx}]`);
-            });
-        });
-    }
+  function updateGrandTotal() {
+    let total = 0;
+    document.querySelectorAll('#calculatorRows .calculator-row').forEach(row => {
+      const qty        = parseInt(row.querySelector('.qty-input').value) || 1;
+      const duration   = parseInt(row.querySelector('.duration-input').value) || 1;
+      const basePrice  = parseFloat(row.querySelector('.price-value').value) || 0;
+      const otc        = parseFloat(row.querySelector('.otc-value').value) || 0;
+      const dPrice     = toPct(row.querySelector('.disc-price').value);
+      const dOtc       = toPct(row.querySelector('.disc-otc').value);
 
-    function updateGrandTotal() {
-        let total = 0;
-        document.querySelectorAll('#calculatorRows .calculator-row').forEach(row => {
-            const qty        = parseInt(row.querySelector('.qty-input').value) || 1;
-            const duration   = parseInt(row.querySelector('.duration-input').value) || 1;
-            const basePrice  = parseFloat(row.querySelector('.price-value').value) || 0;
-            const otc        = parseFloat(row.querySelector('.otc-value').value) || 0;
-            const dPrice     = toPct(row.querySelector('.disc-price').value);
-            const dOtc       = toPct(row.querySelector('.disc-otc').value);
+      const priceAfterDisc = basePrice * (1 - dPrice);
+      const otcAfterDisc   = otc * (1 - dOtc);
 
-            const priceAfterDisc = basePrice * (1 - dPrice);
-            const otcAfterDisc   = otc * (1 - dOtc);
+      const monthlyPPN = withPPN(priceAfterDisc * qty);
+      const oneTimePPN = withPPN(otcAfterDisc   * qty);     // PPN juga untuk OTC
+      total += monthlyPPN * duration + oneTimePPN;
+    });
+    document.getElementById('grandTotal').textContent = fmt(total);
+  }
 
-            const monthly = priceAfterDisc * qty;
-            const oneTime = otcAfterDisc   * qty;
+  function updateRow(row) {
+    const qty        = parseInt(row.querySelector('.qty-input').value) || 1;
+    const duration   = parseInt(row.querySelector('.duration-input').value) || 1;
+    const basePrice  = parseFloat(row.querySelector('.price-value').value) || 0;
+    const otc        = parseFloat(row.querySelector('.otc-value').value) || 0;
+    const dPrice     = toPct(row.querySelector('.disc-price').value);
+    const dOtc       = toPct(row.querySelector('.disc-otc').value);
 
-            total += withPPN(monthly) * duration + withPPN(oneTime);
-        });
-        document.getElementById('grandTotal').textContent = fmt(total);
-    }
+    const priceAfterDisc = basePrice * (1 - dPrice);
+    const otcAfterDisc   = otc * (1 - dOtc);
 
-    function updateRow(row) {
-        const qty        = parseInt(row.querySelector('.qty-input').value) || 1;
-        const duration   = parseInt(row.querySelector('.duration-input').value) || 1;
-        const basePrice  = parseFloat(row.querySelector('.price-value').value) || 0;
-        const otc        = parseFloat(row.querySelector('.otc-value').value) || 0;
-        const dPrice     = toPct(row.querySelector('.disc-price').value);
-        const dOtc       = toPct(row.querySelector('.disc-otc').value);
+    const monthly        = priceAfterDisc * qty;
+    const monthlyPPN     = withPPN(monthly);
+    const oneTime        = otcAfterDisc * qty;
+    const oneTimePPN     = withPPN(oneTime);
+    const finalPrice     = (monthlyPPN * duration) + oneTimePPN;
 
-        const priceAfterDisc = basePrice * (1 - dPrice);
-        const otcAfterDisc   = otc * (1 - dOtc);
+    // tampilan dasar
+    row.querySelector('.price-display').textContent        = fmt(basePrice * qty);
+    row.querySelector('.otc-display').textContent          = fmt(otc * qty);
 
-        const monthly    = priceAfterDisc * qty;           // biaya bulanan setelah diskon
-        const monthlyPPN = withPPN(monthly);
-        const oneTime    = otcAfterDisc * qty;             // OTC setelah diskon
-        const finalPrice = (monthlyPPN * duration) + withPPN(oneTime);
+    // tampilan diskon
+    row.querySelector('.price-times-discount').textContent = fmt(priceAfterDisc * qty);
+    row.querySelector('.otc-times-discount').textContent   = fmt(otcAfterDisc   * qty);
 
-        // tampilan dasar
-        row.querySelector('.price-display').textContent        = fmt(basePrice * qty);
-        row.querySelector('.otc-display').textContent          = fmt(otc * qty);
+    // ringkasan
+    row.querySelector('.monthly-otc').textContent          = fmt(oneTime);
+    row.querySelector('.monthly-price').textContent        = fmt(monthly);
+    row.querySelector('.monthly-price-ppn').textContent    = fmt(monthlyPPN);
+    row.querySelector('.yearly-price').textContent         = fmt(priceAfterDisc * qty * 12);
+    row.querySelector('.final-price-ppn').textContent      = fmt(finalPrice);
 
-        // tampilan diskon
-        row.querySelector('.price-times-discount').textContent = fmt(priceAfterDisc * qty);
-        row.querySelector('.otc-times-discount').textContent   = fmt(otcAfterDisc   * qty);
+    updateGrandTotal();
+  }
 
-        // tampilan ringkasan
-        row.querySelector('.monthly-otc').textContent          = fmt(oneTime);
-        row.querySelector('.monthly-price').textContent        = fmt(monthly);
-        row.querySelector('.monthly-price-ppn').textContent    = fmt(monthlyPPN);
-        row.querySelector('.yearly-price').textContent         = fmt(priceAfterDisc * qty * 12);
-        row.querySelector('.final-price-ppn').textContent      = fmt(finalPrice);
+  function filterProductsByCategory(row) {
+    const categoryId    = row.querySelector('.category-select').value;
+    const productSelect = row.querySelector('.product-select');
+    productSelect.value = '';
+    Array.from(productSelect.options).forEach(option => {
+      if (option.value === '') { option.style.display = 'block'; return; }
+      option.style.display = (String(option.dataset.category) === String(categoryId)) ? 'block' : 'none';
+    });
+  }
 
-        updateGrandTotal();
-    }
-
-    function filterProductsByCategory(row) {
-        const categoryId   = row.querySelector('.category-select').value;
-        const productSelect = row.querySelector('.product-select');
-
-        // kosongkan pilihan saat kategori berubah
-        productSelect.value = '';
-
-        Array.from(productSelect.options).forEach(option => {
-            if (option.value === '') {
-                option.style.display = 'block';
-                return;
-            }
-            option.style.display = (String(option.dataset.category) === String(categoryId)) ? 'block' : 'none';
-        });
-    }
-
-    function attachRowEvents(row) {
-        // Kategori -> filter product options
-        row.querySelector('.category-select').addEventListener('change', () => {
-            filterProductsByCategory(row);
-            row.querySelector('.price-value').value = 0;
-            updateRow(row);
-        });
-
-        // Product -> set price
-        row.querySelector('.product-select').addEventListener('change', function () {
-            const opt = this.selectedOptions[0];
-            const price = parseFloat(opt?.dataset?.price || 0);
-            row.querySelector('.price-value').value = price;
-            updateRow(row);
-        });
-
-        // Skema/OTC -> set otc value
-        row.querySelector('.otc-select').addEventListener('change', function () {
-            const opt = this.selectedOptions[0];
-            const otcPrice = parseFloat(opt?.dataset?.price || 0);
-            row.querySelector('.otc-value').value = otcPrice;
-            updateRow(row);
-        });
-
-        // Qty, Duration, Diskon
-        row.querySelector('.qty-input').addEventListener('input', () => updateRow(row));
-        row.querySelector('.duration-input').addEventListener('input', () => updateRow(row));
-        row.querySelector('.disc-price').addEventListener('input', () => updateRow(row));
-        row.querySelector('.disc-otc').addEventListener('input', () => updateRow(row));
-    }
-
-    // Delegasi klik HAPUS
-    document.getElementById('calculatorRows').addEventListener('click', function (e) {
-        const btn = e.target.closest('.remove-row');
-        if (!btn) return;
-
-        const row = btn.closest('tr.calculator-row');
-        if (!row) return;
-
-        const rows = document.querySelectorAll('#calculatorRows .calculator-row');
-        if (rows.length === 1) {
-            resetRow(row);
-            updateGrandTotal();
-            return;
-        }
-
-        row.remove();
-        renumberRows();
-        updateGrandTotal();
+  function attachRowEvents(row) {
+    row.querySelector('.category-select').addEventListener('change', () => {
+      filterProductsByCategory(row);
+      row.querySelector('.price-value').value = 0;
+      updateRow(row);
     });
 
-    // Tambah baris
-    document.getElementById('addRowBtn').addEventListener('click', () => {
-        const templateRow = document.querySelector('#calculatorRows .calculator-row');
-        const newRow = templateRow.cloneNode(true);
-
-        // reset isi & index
-        newRow.querySelectorAll('select[name], input[name]').forEach(el => {
-            el.name = el.name.replace(/\[\d+\]/, '[9999]'); // placeholder
-        });
-        resetRow(newRow);
-
-        document.getElementById('calculatorRows').appendChild(newRow);
-        renumberRows();
-        attachRowEvents(newRow);
-        // pastikan product ter-filter sesuai kategori baris baru
-        filterProductsByCategory(newRow);
-        updateGrandTotal();
+    row.querySelector('.product-select').addEventListener('change', function () {
+      const price = parseFloat(this.selectedOptions[0]?.dataset?.price || 0);
+      row.querySelector('.price-value').value = price;
+      updateRow(row);
     });
 
-    // Reset form
-    document.getElementById('resetBtn').addEventListener('click', () => {
-        if (!confirm('Apakah Anda yakin ingin reset semua data?')) return;
-
-        const tbody = document.getElementById('calculatorRows');
-        const rows = Array.from(tbody.querySelectorAll('.calculator-row'));
-        rows.slice(1).forEach(r => r.remove());      // sisakan 1 baris
-        resetRow(rows[0]);
-        renumberRows();
-        updateGrandTotal();
+    row.querySelector('.otc-select').addEventListener('change', function () {
+      const otcPrice = parseFloat(this.selectedOptions[0]?.dataset?.price || 0);
+      row.querySelector('.otc-value').value = otcPrice;
+      updateRow(row);
     });
 
-    // Print PDF submit
-    document.getElementById('printPdfBtn').addEventListener('click', function () {
-        const form = document.getElementById('calculatorForm');
-        const url  = this.dataset.printUrl;
+    row.querySelector('.qty-input').addEventListener('input', () => updateRow(row));
+    row.querySelector('.duration-input').addEventListener('input', () => updateRow(row));
+    row.querySelector('.disc-price').addEventListener('input', () => updateRow(row));
+    row.querySelector('.disc-otc').addEventListener('input', () => updateRow(row));
+  }
 
-        // kumpulkan payload sederhana (opsional—sesuaikan controller kamu)
-        const items = [];
-        document.querySelectorAll('#calculatorRows .calculator-row').forEach((row) => {
-            const obj = {
-                category_id : row.querySelector('.category-select').value || null,
-                product_id  : row.querySelector('.product-select').value || null,
-                skema       : row.querySelector('.otc-select').value || null,
-                qty         : parseInt(row.querySelector('.qty-input').value) || 1,
-                duration    : parseInt(row.querySelector('.duration-input').value) || 1,
-                price       : parseFloat(row.querySelector('.price-value').value) || 0,
-                otc         : parseFloat(row.querySelector('.otc-value').value) || 0,
-                disc_price  : Number(row.querySelector('.disc-price').value) || 0,
-                disc_otc    : Number(row.querySelector('.disc-otc').value) || 0,
-            };
-            items.push(obj);
-        });
+  // Hapus baris
+  document.getElementById('calculatorRows').addEventListener('click', function (e) {
+    const btn = e.target.closest('.remove-row');
+    if (!btn) return;
+    const row = btn.closest('tr.calculator-row');
+    const rows = document.querySelectorAll('#calculatorRows .calculator-row');
+    if (rows.length === 1) {
+      resetRow(row); updateGrandTotal(); return;
+    }
+    row.remove(); renumberRows(); updateGrandTotal();
+  });
 
-        // buat/isi input hidden
-        let payload = form.querySelector('input[name="payload"]');
-        if (!payload) {
-            payload = document.createElement('input');
-            payload.type = 'hidden';
-            payload.name = 'payload';
-            form.appendChild(payload);
-        }
-        payload.value = JSON.stringify({
-            title: document.getElementById('calculationTitle').value || '',
-            items
-        });
+  // Tambah baris
+  document.getElementById('addRowBtn').addEventListener('click', () => {
+    const templateRow = document.querySelector('#calculatorRows .calculator-row');
+    const newRow = templateRow.cloneNode(true);
 
-        form.action = url;
-        form.method = 'POST';
-        form.submit();
+    // normalisasi name index
+    newRow.querySelectorAll('select[name], input[name]').forEach(el => {
+      el.name = el.name.replace(/\[\d+\]/, '[9999]'); // placeholder
+    });
+    resetRow(newRow);
+
+    document.getElementById('calculatorRows').appendChild(newRow);
+    renumberRows();
+    attachRowEvents(newRow);
+    filterProductsByCategory(newRow);
+    updateGrandTotal();
+  });
+
+  // Reset form
+  document.getElementById('resetBtn').addEventListener('click', () => {
+    if (!confirm('Apakah Anda yakin ingin reset semua data?')) return;
+    const tbody = document.getElementById('calculatorRows');
+    const rows = Array.from(tbody.querySelectorAll('.calculator-row'));
+    rows.slice(1).forEach(r => r.remove());
+    resetRow(rows[0]); renumberRows(); updateGrandTotal();
+  });
+
+  // Print PDF
+  document.getElementById('printPdfBtn').addEventListener('click', function () {
+    const form = document.getElementById('calculatorForm');
+    const url  = this.dataset.printUrl;
+
+    // Kumpulkan payload (SATU kali, tidak dobel lagi)
+    const items = [];
+    document.querySelectorAll('#calculatorRows .calculator-row').forEach((row) => {
+      const catSel   = row.querySelector('.category-select');
+      const prodSel  = row.querySelector('.product-select');
+      const skemaSel = row.querySelector('.otc-select');
+
+      const qty        = parseInt(row.querySelector('.qty-input').value) || 1;
+      const duration   = parseInt(row.querySelector('.duration-input').value) || 1;
+      const basePrice  = parseFloat(row.querySelector('.price-value').value) || 0;
+      const otc        = parseFloat(row.querySelector('.otc-value').value) || 0;
+      const dPricePct  = Number(row.querySelector('.disc-price').value) || 0;
+      const dOtcPct    = Number(row.querySelector('.disc-otc').value) || 0;
+
+      const dPrice = dPricePct/100, dOtc = dOtcPct/100;
+      const priceAfterDiscount = basePrice * (1 - dPrice);
+      const otcAfterDiscount   = otc * (1 - dOtc);
+      const monthly            = priceAfterDiscount * qty;
+      const monthlyWithPPN     = withPPN(monthly);
+      const finalWithPPN       = monthlyWithPPN * duration + withPPN(otcAfterDiscount * qty);
+
+      items.push({
+        // label
+        category_product : catSel?.options[catSel.selectedIndex]?.text?.trim() || '',
+        product_name     : prodSel?.options[prodSel.selectedIndex]?.text?.trim() || '',
+        schema           : skemaSel?.options[skemaSel.selectedIndex]?.text?.trim() || '',
+
+        // angka input
+        qty, duration,
+        price            : basePrice,
+        discount         : dPricePct,
+        otc_category     : skemaSel?.options[skemaSel.selectedIndex]?.text?.trim() || '',
+        otc_price        : otc,
+        otc_discount     : dOtcPct,
+
+        // angka hitung (agar PDF match UI)
+        price_after_discount : priceAfterDiscount,
+        otc_after_discount   : otcAfterDiscount,
+        monthly_with_ppn     : monthlyWithPPN,
+        final_with_ppn       : finalWithPPN,
+        ppn_rate             : 11
+      });
     });
 
-    // --- init untuk baris pertama
-    const firstRow = document.querySelector('#calculatorRows .calculator-row');
-    attachRowEvents(firstRow);
-    filterProductsByCategory(firstRow); // sembunyikan product sampai kategori dipilih
-    updateRow(firstRow);
+    // hidden payload
+    let payload = form.querySelector('input[name="payload"]');
+    if (!payload) {
+      payload = document.createElement('input');
+      payload.type = 'hidden';
+      payload.name = 'payload';
+      form.appendChild(payload);
+    }
+    payload.value = JSON.stringify({
+      title: document.getElementById('calculationTitle').value || '',
+      items
+    });
+
+    form.action = url;
+    form.method = 'POST';
+    form.submit();
+  });
+
+  // --- init baris pertama
+  const firstRow = document.querySelector('#calculatorRows .calculator-row');
+  attachRowEvents(firstRow);
+  filterProductsByCategory(firstRow);
+  updateRow(firstRow);
 });
 </script>
+
 @endpush

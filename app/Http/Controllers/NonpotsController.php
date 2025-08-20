@@ -23,71 +23,57 @@ class NonpotsController extends Controller
         
 
     public function printPdf(Request $request)
-    {
-        // Validasi input
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'items' => 'required|array|min:1',
-            'items.*.category_name' => 'required|string',
-            'items.*.product_name' => 'required|string',
-            'items.*.otc_category' => 'required|string',
-            'items.*.price' => 'required|numeric|min:0',
-            'items.*.otc' => 'required|numeric|min:0',
-            'items.*.duration' => 'required|integer|min:1',
-        ]);
+{
+    // payload bisa berupa hidden input 'payload' (JSON string)
+    $raw = $request->input('payload');
+    $data = is_string($raw) ? (json_decode($raw, true) ?: []) : [];
+    $title   = $data['title'] ?? 'Quotation';
+    $inItems = $data['items'] ?? [];
 
-        $title = $request->input('title');
-        $items = $request->input('items');
-        $grandTotal = 0;
+    // Ambil nama kategori & produk dari DB untuk dipetakan
+    $catMap  = \App\Models\Category::pluck('nama_category', 'category_id')->toArray();
+    $prodMap = \App\Models\Product ::pluck('nama_product',  'id')->toArray();
 
-        // Proses setiap item untuk menghitung nilai-nilai yang diperlukan
-        foreach ($items as &$item) {
-            $price = (float) $item['price'];
-            $otc = (float) $item['otc'];
-            $duration = (int) $item['duration'];
+    // Normalisasi kunci sesuai yang dipakai di view PDF
+    $items = [];
+    foreach ($inItems as $it) {
+        $items[] = [
+            'category_name' => $it['category_name']
+                ?? ($catMap[$it['category_id'] ?? null] ?? ''),
+            'product_name'  => $it['product_name']
+                ?? ($prodMap[$it['product_id'] ?? null] ?? ''),
+            'schema'        => $it['schema'] ?? ($it['skema'] ?? ''),
 
-            // Hitung harga dengan PPN (11%)
-            $priceWithPpn = $price * 1.11;
-            
-            // Hitung harga x durasi (dengan PPN)
-            $priceDuration = $priceWithPpn * $duration;
-            
-            // Hitung Final Price tanpa PPN: (price x duration) + OTC
-            $finalPriceNoPpn = ($price * $duration) + $otc;
-            
-            // Hitung Final Price dengan PPN: (price with PPN x duration) + OTC
-            $finalPrice = $priceDuration + $otc;
+            'qty'           => (int)   ($it['qty'] ?? 1),
+            'duration'      => (int)   ($it['duration'] ?? 1),
+            'price'         => (float) ($it['price'] ?? 0),
+            'discount'      => (float) ($it['discount'] ?? ($it['disc_price'] ?? 0)),
 
-            // Tambahkan ke item array
-            $item['price_with_ppn'] = $priceWithPpn;
-            $item['price_duration'] = $priceDuration;
-            $item['final_price_no_ppn'] = $finalPriceNoPpn;
-            $item['final_price'] = $finalPrice;
-
-            // Tambahkan ke grand total (menggunakan final price dengan PPN)
-            $grandTotal += $finalPrice;
-        }
-
-        // Data untuk PDF
-        $data = [
-            'title' => $title,
-            'items' => $items,
-            'grand_total' => $grandTotal,
-            'generated_at' => now()->format('d/m/Y H:i:s')
+            'otc_category'  => $it['otc_category'] ?? ($it['skema'] ?? ''),
+            'otc_price'     => (float) ($it['otc_price'] ?? ($it['otc'] ?? 0)),
+            'otc_discount'  => (float) ($it['otc_discount'] ?? ($it['disc_otc'] ?? 0)),
         ];
-
-        // Generate PDF
-        $pdf = PDF::loadView('nonpots.pdf', $data);
-        
-        // Set paper size dan orientasi
-        $pdf->setPaper('A4', 'landscape');
-        
-        // Set nama file
-        $filename = 'Kalkulator_Paket_' . str_replace(' ', '_', $title) . '_' . date('Ymd_His') . '.pdf';
-        
-        // Return PDF untuk download
-        return $pdf->download($filename);
     }
+
+    // Grand total (pakai rumus yang sama dengan Blade agar konsisten)
+    $grandTotal = 0;
+    foreach ($items as $it) {
+        $line = ($it['price'] * $it['qty'] * $it['duration']) * (1 - $it['discount']/100);
+        $line += $it['otc_price'] * (1 - $it['otc_discount']/100);
+        $grandTotal += $line;
+    }
+
+    $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('nonpots.pdf', [
+        'title'        => $title,
+        'items'        => $items,
+        'grand_total'  => $grandTotal,
+        'generated_at' => now()->format('d/m/Y H:i:s'),
+    ])->setPaper('A4', 'landscape');
+
+    return $pdf->download('Kalkulator_Paket_'.str_replace(' ', '_', $title).'_'.now()->format('Ymd_His').'.pdf');
+}
+
+
 
     public function save(Request $request)
     {

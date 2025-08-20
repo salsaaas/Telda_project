@@ -9,9 +9,16 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('categories', function (Blueprint $table) {
-            $table->bigIncrements('category_id');       // PK bigint unsigned AUTO_INCREMENT
-            $table->string('nama_category')->unique();  // cegah duplikat nama kategori
+            // Primary key: bigint unsigned AUTO_INCREMENT dengan nama category_id
+            $table->bigIncrements('category_id');
+
+            // Nama kategori unik (contoh nilai: INDIBIZ, ADD ON)
+            $table->string('nama_category', 100)->unique();
+
             $table->timestamps();
+
+            // (Opsional) Tambah index untuk pencarian cepat
+            $table->index('nama_category', 'idx_categories_nama_category');
         });
     }
 

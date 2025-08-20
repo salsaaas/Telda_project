@@ -1,170 +1,212 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $title }}</title>
+    <meta charset="utf-8">
+    <title>Kalkulator Paket - Non-Pots</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            font-size: 10px;
-            margin: 20px;
-            color: #333;
-        }
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-            border-bottom: 2px solid #1e3a8a;
-            padding-bottom: 15px;
-        }
-        .header h1 {
-            color: #1e3a8a;
-            margin: 0;
-            font-size: 18px;
-        }
-        .header h2 {
-            color: #666;
-            margin: 5px 0;
-            font-size: 14px;
-            font-weight: normal;
-        }
-        .info-section {
-            margin-bottom: 20px;
-        }
-        .info-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 5px;
-        }
-        .info-label {
-            font-weight: bold;
-            color: #1e3a8a;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-        }
-        th {
-            background-color: #1e3a8a;
-            color: white;
-            padding: 8px 5px;
-            text-align: center;
-            font-size: 8px;
-            border: 1px solid #ddd;
-        }
-        td {
-            padding: 6px 5px;
-            text-align: center;
-            border: 1px solid #ddd;
-            font-size: 8px;
-        }
-        .text-left { text-align: left; }
-        .text-right { text-align: right; }
-        .text-center { text-align: center; }
-        
-        .total-section {
-            margin-top: 20px;
-            text-align: right;
-        }
-        .grand-total {
-            font-size: 14px;
-            font-weight: bold;
-            color: #1e3a8a;
-            background-color: #f8f9fa;
-            padding: 10px;
-            border: 2px solid #1e3a8a;
-            display: inline-block;
-            margin-top: 10px;
-        }
-        .footer {
-            margin-top: 30px;
-            text-align: center;
-            color: #666;
-            font-size: 8px;
-            border-top: 1px solid #ddd;
-            padding-top: 10px;
-        }
-        .currency {
-            font-family: 'Courier New', monospace;
-        }
+        * { box-sizing: border-box; }
+        html, body { margin:0; padding:18px; font-family: Arial, Helvetica, sans-serif; font-size:12px; color:#000; }
+        h2 { text-align:center; margin:0 0 8px 0; font-size:18px; }
+        h3 { margin:18px 0 8px 0; font-size:14px; }
+        p.meta { margin:0 0 12px 0; }
+        table { width:100%; border-collapse:collapse; table-layout:fixed; font-size:12px; }
+        th, td { border:1px solid #000; padding:6px; text-align:center; vertical-align:middle; word-wrap:break-word; }
+        th { background:#f2f2f2; font-weight:bold; }
+        .text-left  { text-align:left; }
+        .text-right { text-align:right; }
+        .total-row { font-weight:bold; background:#f9f9f9; }
+        /* lebar kolom tabel 1 (Quotation) */
+        .q col:nth-child(1){width:12%}
+        .q col:nth-child(2){width:22%}
+        .q col:nth-child(3){width:12%}
+        .q col:nth-child(4){width:6%}
+        .q col:nth-child(5){width:8%}
+        .q col:nth-child(6){width:10%}
+        .q col:nth-child(7){width:8%}
+        .q col:nth-child(8){width:12%}
+        .q col:nth-child(9){width:10%}
+        .q col:nth-child(10){width:8%}
+        .q col:nth-child(11){width:12%}
+        /* lebar kolom tabel 2 (Rincian) */
+        .r col:nth-child(1){width:18%}
+        .r col:nth-child(2){width:15%}
+        .r col:nth-child(3){width:12%}
+        .r col:nth-child(4){width:12%}
+        .r col:nth-child(5){width:7%}
+        .r col:nth-child(6){width:12%}
+        .r col:nth-child(7){width:12%}
+        .r col:nth-child(8){width:12%}
+        .no-border td { border:0!important; }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>RINCIAN BIAYA PAKET</h1>
-        <h2>{{ $title }}</h2>
-    </div>
 
-    <div class="info-section">
-        <div class="info-row">
-            <span class="info-label">Tanggal Cetak:</span>
-            <span>{{ $generated_at }}</span>
-        </div>
-        <div class="info-row">
-            <span class="info-label">Total Item:</span>
-            <span>{{ count($items) }} Produk</span>
-        </div>
-    </div>
+    <h2>Quotation</h2>
+    <p class="meta"><strong>Tanggal Cetak:</strong> {{ \Carbon\Carbon::now()->format('d-m-Y H:i') }}</p>
 
+    {{-- ===================== TABEL 1: QUOTATION ===================== --}}
     <table>
+        <colgroup class="q"><col><col><col><col><col><col><col><col><col><col><col></colgroup>
         <thead>
-            <tr>
-                <th style="width: 4%;">No</th>
-                <th style="min-width: 150px;">Category Product</th>
-                <th style="min-width: 450px;">Product Name</th>
-                <th style="min-width: 180px;">Skema</th>
-                <th style="min-width: 80px;">Qty</th>                        <th style="min-width: 2px;">Price (Rp)</th>
-                <th style="min-width: 120px;">OTC (Rp)</th>
-                <th style="min-width: 130px;">Discont Price</th>
-                <th style="min-width: 130px;">Discont OTC</th>
-                <th style="min-width: 150px;">Price x Discount</th>
-                <th style="min-width: 150px;">OTC x Discount</th>
-                <th style="min-width: 120px;">Duration (Bulan)</th>
-                <th style="min-width: 120px;">OTC</th>
-                <th style="min-width: 150px;">Monthly Price</th>
-                <th style="min-width: 180px;">Monthly Price with PPN</th>
-                <th style="min-width: 150px;">Year Price</th>
-                <th style="min-width: 180px;">Final Price with PPN</th>
-            </tr>
+        <tr>
+            <th>Kategori</th>
+            <th>Produk</th>
+            <th>Skema</th>
+            <th>Qty</th>
+            <th>Durasi</th>
+            <th>Harga</th>
+            <th>Diskon</th>
+            <th>OTC Kategori</th>
+            <th>OTC Harga</th>
+            <th>OTC Diskon</th>
+            <th>Total</th>
+        </tr>
         </thead>
         <tbody>
-    @foreach($items as $index => $item)
-    <tr>
-        <td>{{ $index + 1 }}</td>
-        <td class="text-left">{{ $item['category_name'] }}</td>
-        <td class="text-left">{{ $item['product_name'] }}</td>
-        <td class="text-center">{{ $item['otc_category'] }}</td>
-        <td>{{ $item['qty'] }}</td>
-        <td class="text-right currency">{{ number_format($item['price'], 0, ',', '.') }}</td>
-        <td class="text-right currency">{{ number_format($item['otc'], 0, ',', '.') }}</td>
-        <td class="text-right currency">{{ number_format($item['discount_price'], 0, ',', '.') }}</td>
-        <td class="text-right currency">{{ number_format($item['discount_otc'], 0, ',', '.') }}</td>
-        <td class="text-right currency">{{ number_format($item['price_x_discount'], 0, ',', '.') }}</td>
-        <td class="text-right currency">{{ number_format($item['otc_x_discount'], 0, ',', '.') }}</td>
-        <td class="text-center">{{ $item['duration'] }}</td>
-        <td class="text-right currency">{{ number_format($item['otc_total'], 0, ',', '.') }}</td>
-        <td class="text-right currency">{{ number_format($item['monthly_price'], 0, ',', '.') }}</td>
-        <td class="text-right currency">{{ number_format($item['monthly_price_ppn'], 0, ',', '.') }}</td>
-        <td class="text-right currency">{{ number_format($item['year_price'], 0, ',', '.') }}</td>
-        <td class="text-right currency" style="font-weight: bold; background-color: #f8f9fa;">
-            {{ number_format($item['final_price'], 0, ',', '.') }}
-        </td>
-    </tr>
-    @endforeach
-</tbody>
+        @php
+            $grandTotalQuotation = 0;
+            $rupiah = fn($v) => number_format((float)$v, 0, ',', '.');
+        @endphp
 
+        @forelse($items as $row)
+            @php
+                $ppnRate       = isset($row['ppn_rate']) ? (float)$row['ppn_rate'] : ($ppn_rate ?? 11); // %
+                $category      = $row['category_name']  ?? $row['category'] ?? '-';
+                $product       = $row['product_name']   ?? $row['product'] ?? '-';
+                $schema        = $row['schema']         ?? $row['skema'] ?? '-';
+                $qty           = (int)   ($row['qty'] ?? 1);
+                $duration      = (int)   ($row['duration'] ?? 1);
+
+                $price         = (float) ($row['price'] ?? 0);           // harga bulanan sebelum diskon
+                $discount      = (float) ($row['discount'] ?? 0);        // %
+                $otcCategory   = $row['otc_category'] ?? $row['otc_kategori'] ?? '-';
+                $otcPrice      = (float) ($row['otc_price'] ?? $row['otc_harga'] ?? 0);
+                $otcDiscount   = (float) ($row['otc_discount'] ?? $row['otc_diskon'] ?? 0);
+
+                // nilai yang mungkin sudah disediakan frontend:
+                $priceAfterDiscProvided = $row['price_after_discount'] ?? null;       // alias "price_x_discount"
+                $otcAfterDiscProvided   = $row['otc_after_discount']   ?? null;       // alias "otc_x_discount"
+                $monthlyWithPpnProvided = $row['monthly_with_ppn']     ?? null;
+                $finalWithPpnProvided   = $row['final_with_ppn']       ?? null;
+
+                // fallback perhitungan standar (aman default)
+                $priceAfterDisc = is_numeric($priceAfterDiscProvided)
+                                  ? (float)$priceAfterDiscProvided
+                                  : $price * (1 - $discount/100);
+
+                $otcAfterDisc   = is_numeric($otcAfterDiscProvided)
+                                  ? (float)$otcAfterDiscProvided
+                                  : $otcPrice * (1 - $otcDiscount/100);
+
+                $monthlyWithPPN = is_numeric($monthlyWithPpnProvided)
+                                  ? (float)$monthlyWithPpnProvided
+                                  : $priceAfterDisc * (1 + $ppnRate/100);
+
+                $totalQuotation = is_numeric($finalWithPpnProvided)
+                                  ? (float)$finalWithPpnProvided
+                                  : ($monthlyWithPPN * $duration * $qty) + $otcAfterDisc;
+
+                $grandTotalQuotation += $totalQuotation;
+            @endphp
+            <tr>
+                <td>{{ $category }}</td>
+                <td class="text-left">{{ $product }}</td>
+                <td>{{ $schema }}</td>
+                <td>{{ $qty }}</td>
+                <td>{{ $duration }}</td>
+                <td class="text-right">{{ $rupiah($price) }}</td>
+                <td>{{ rtrim(rtrim(number_format($discount,2,',','.'), '0'), ',') }}%</td>
+                <td>{{ $otcCategory }}</td>
+                <td class="text-right">{{ $rupiah($otcPrice) }}</td>
+                <td>{{ rtrim(rtrim(number_format($otcDiscount,2,',','.'), '0'), ',') }}%</td>
+                <td class="text-right">{{ $rupiah($totalQuotation) }}</td>
+            </tr>
+        @empty
+            <tr><td colspan="11" class="text-left">Tidak ada item.</td></tr>
+        @endforelse
+
+        <tr class="total-row">
+            <td colspan="10" class="text-right">Grand Total</td>
+            <td class="text-right">{{ $rupiah($grandTotalQuotation) }}</td>
+        </tr>
+        </tbody>
     </table>
 
-    <div class="total-section">
-        <div class="grand-total">
-            GRAND TOTAL: Rp {{ number_format($grand_total, 0, ',', '.') }}
-        </div>
-    </div>
+    {{-- ===================== TABEL 2: RINCIAN PERHITUNGAN NON-POTS ===================== --}}
+    <h3>Rincian Perhitungan Non-Pots</h3>
+    <table>
+        <colgroup class="r"><col><col><col><col><col><col><col><col></colgroup>
+        <thead>
+        <tr>
+            <th>Price x Discount</th>
+            <th>OTC x Discount</th>
+            <th>Duration (Bulan)</th>
+            <th>OTC (setelah disc)</th>
+            <th>Monthly Price</th>
+            <th>Monthly Price with PPN</th>
+            <th>Year Price</th>
+            <th>Final Price with PPN</th>
+        </tr>
+        </thead>
+        <tbody>
+        @php $grandTotalFinal = 0; @endphp
+        @forelse($items as $row)
+            @php
+                $ppnRate  = isset($row['ppn_rate']) ? (float)$row['ppn_rate'] : ($ppn_rate ?? 11);
+                $qty      = (int)   ($row['qty'] ?? 1);
+                $duration = (int)   ($row['duration'] ?? 1);
+                $price    = (float) ($row['price'] ?? 0);
+                $discount = (float) ($row['discount'] ?? 0);
+                $otc      = (float) ($row['otc_price'] ?? $row['otc_harga'] ?? 0);
+                $odisc    = (float) ($row['otc_discount'] ?? $row['otc_diskon'] ?? 0);
 
-    <div class="footer">
-        <p>Dokumen ini digenerate otomatis oleh sistem Kalkulator Indibiz pada {{ $generated_at }}</p>
-        <p>© {{ date('Y') }} Kalkulator Indibiz. All rights reserved.</p>
-    </div>
+                $priceDisc = is_numeric($row['price_after_discount'] ?? null)
+                             ? (float)$row['price_after_discount']
+                             : $price * (1 - $discount/100);
+
+                $otcDisc   = is_numeric($row['otc_after_discount'] ?? null)
+                             ? (float)$row['otc_after_discount']
+                             : $otc * (1 - $odisc/100);
+
+                $monthly   = $priceDisc * $qty;
+                $monthlyPPN= is_numeric($row['monthly_with_ppn'] ?? null)
+                             ? (float)$row['monthly_with_ppn']
+                             : $monthly * (1 + $ppnRate/100);
+
+                $yearPrice = $monthly * 12;
+
+                $finalPPN  = is_numeric($row['final_with_ppn'] ?? null)
+                             ? (float)$row['final_with_ppn']
+                             : ($monthlyPPN * $duration) + $otcDisc;
+
+                $grandTotalFinal += $finalPPN;
+            @endphp
+            <tr>
+                <td class="text-right">{{ $rupiah($priceDisc) }}</td>
+                <td class="text-right">{{ $rupiah($otcDisc) }}</td>
+                <td>{{ $duration }}</td>
+                <td class="text-right">{{ $rupiah($otcDisc) }}</td>
+                <td class="text-right">{{ $rupiah($monthly) }}</td>
+                <td class="text-right">{{ $rupiah($monthlyPPN) }}</td>
+                <td class="text-right">{{ $rupiah($yearPrice) }}</td>
+                <td class="text-right">{{ $rupiah($finalPPN) }}</td>
+            </tr>
+        @empty
+            <tr><td colspan="8" class="text-left">Tidak ada item.</td></tr>
+        @endforelse
+        <tr class="total-row">
+            <td colspan="7" class="text-right">Total Keseluruhan</td>
+            <td class="text-right">{{ $rupiah($grandTotalFinal) }}</td>
+        </tr>
+        </tbody>
+    </table>
+
+    {{-- Opsional: judul kalkulasi (kalau dikirim dari form) --}}
+    @if(!empty($title))
+        <table class="no-border" style="margin-top:10px;">
+            <tr class="no-border"><td class="no-border text-left"><strong>Judul Kalkulasi:</strong> {{ $title }}</td></tr>
+        </table>
+    @endif
+
 </body>
 </html>

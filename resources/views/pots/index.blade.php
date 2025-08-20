@@ -25,7 +25,20 @@
         <form id="calculatorForm">
             @csrf
             <div class="table-responsive">
-                <table class="table table-bordered" id="calculatorTable">
+                <table class="table table-bordered text-center" id="calculatorTable" style="min-width:2000px;width:100%;">
+                    <colgroup>
+                        <col style="width:150px">   {{-- Category Product --}}
+                        <col style="width:450px">   {{-- Product Name --}}
+                        <col style="width:180px">   {{-- OTC Category --}}
+                        <col style="width:120px">   {{-- Price (Rp) --}}
+                        <col style="width:120px">   {{-- OTC (Rp) --}}
+                        <col style="width:180px">   {{-- Price + PPN (Rp) --}}
+                        <col style="width:120px">   {{-- Duration (Bulan) --}}
+                        <col style="width:150px">   {{-- Price x Duration (Rp) --}}
+                        <col style="width:180px">   {{-- Final Price no PPN (Rp) --}}
+                        <col style="width:180px">   {{-- Final Price (Rp) --}}
+                        <col style="width:100px">   {{-- Aksi --}}
+                    </colgroup>
                     <thead>
                         <tr>
                             <th>Category Product</th>
@@ -46,14 +59,11 @@
                             <td>
                                 <select name="items[0][category_id]" class="form-select category-select" required>
                                     @foreach($categories as $category)
-                                        <option value="{{ $category->category_id }}" data-name="{{ $category->nama_category }}">
-                                            {{ $category->nama_category }}
-                                        </option>
+                                       @echo(dd($category)) <option value="{{ $category->category_id }}">{{ $category->nama_category }}</option>
                                     @endforeach
                                 </select>
                             </td>
                             <td>
-                                {{-- Product di-load via AJAX Select2 --}}
                                 <select name="items[0][product_id]" class="form-select product-select" required></select>
                             </td>
                             <td>
@@ -72,7 +82,7 @@
                                 <input type="hidden" name="items[0][otc]" class="otc-value" value="0">
                             </td>
                             <td><span class="price-with-ppn text-primary">Rp 0</span></td>
-                            <td><input type="number" name="items[0][duration]" class="form-control duration-input" min="1" value="1" required style="width: 80px;"></td>
+                            <td><input type="number" name="items[0][duration]" class="form-control duration-input" min="1" value="1" required style="width:80px;"></td>
                             <td><span class="price-duration text-info">Rp 0</span></td>
                             <td><span class="final-price-no-ppn text-warning">Rp 0</span></td>
                             <td><span class="final-price text-success">Rp 0</span></td>
@@ -136,7 +146,7 @@
             <input type="hidden" name="items[0][otc]" class="otc-value" value="0">
         </td>
         <td><span class="price-with-ppn text-primary">Rp 0</span></td>
-        <td><input type="number" name="items[0][duration]" class="form-control duration-input" min="1" value="1" required style="width: 80px;"></td>
+        <td><input type="number" name="items[0][duration]" class="form-control duration-input" min="1" value="1" required style="width:80px;"></td>
         <td><span class="price-duration text-info">Rp 0</span></td>
         <td><span class="final-price-no-ppn text-warning">Rp 0</span></td>
         <td><span class="final-price text-success">Rp 0</span></td>
@@ -149,6 +159,51 @@
 </template>
 @endsection
 
+{{-- Samakan tampilan dengan Non-Pots / hindari “nabrak garis” --}}
+<style>
+  /* Sembunyikan search box pada dropdown Select2 */
+  .select2-dropdown.no-search .select2-search--dropdown { display: none !important; }
+
+  /* Sel tabel rata tengah vertikal */
+  #calculatorTable th, #calculatorTable td { vertical-align: middle; }
+
+  /* Tinggi kontrol disetarakan dengan Bootstrap (≈38px) */
+  :root { --input-h: 38px; }
+
+  /* Input & select native */
+  #calculatorTable .form-select,
+  #calculatorTable .form-control {
+    height: var(--input-h);
+    padding-top: .375rem;
+    padding-bottom: .375rem;
+  }
+
+  /* Select2 mengikuti tinggi Bootstrap */
+  .select2-container { width: 100% !important; }
+  .select2-container--default .select2-selection--single {
+    height: var(--input-h);
+    border: 1px solid #ced4da;
+    border-radius: .375rem;
+  }
+  .select2-container--default .select2-selection--single .select2-selection__rendered {
+    line-height: calc(var(--input-h) - 2px);   /* center teks */
+    padding-left: .75rem;
+    padding-right: 2.25rem;                    /* ruang untuk arrow/clear */
+  }
+  .select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: var(--input-h);
+    right: .5rem;
+  }
+  .select2-container--default .select2-selection--single .select2-selection__clear {
+    height: var(--input-h);
+    line-height: var(--input-h);
+  }
+
+  /* Kolom Product Name rata kiri (lainnya tetap center) */
+  #calculatorTable th:nth-child(2),
+  #calculatorTable td:nth-child(2) { text-align: left; }
+</style>
+
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -160,14 +215,15 @@ document.addEventListener('DOMContentLoaded', function() {
         const $category = $row.find('.category-select');
         const $product  = $row.find('.product-select');
 
-        // aman: destroy hanya jika sudah terpasang
         if ($product.data('select2')) { $product.select2('destroy'); }
 
         $product.select2({
             width: '100%',
+            dropdownAutoWidth: true,
             placeholder: '-',
             allowClear: true,
-            minimumInputLength: 0,    // bisa tampil tanpa mengetik
+            minimumInputLength: 0,
+            dropdownCssClass: 'no-search',
             ajax: {
                 url: '{{ route("potproducts.byCategory") }}',
                 delay: 0,
@@ -190,14 +246,14 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        // saat dropdown dibuka, trigger query kosong agar list awal muncul
+        // Fetch awal saat dropdown dibuka
         $product.on('select2:open', function () {
-            if (!$category.val()) return; // kalau kategori kosong, jangan fetch
+            if (!$category.val()) return;
             const s2 = $product.data('select2');
             if (s2) { s2.trigger('query', { term: '' }); }
         });
 
-        // reset saat kategori berubah
+        // Ganti kategori => reset produk & harga
         $category.off('change.s2').on('change.s2', function () {
             $product.val(null).trigger('change');
             $product.empty().trigger('change');
@@ -207,7 +263,7 @@ document.addEventListener('DOMContentLoaded', function() {
             updateRow(rowEl);
         });
 
-        // set price saat pilih/clear
+        // Pilih / clear produk
         $product.off('select2:select.s2 clear.s2')
             .on('select2:select.s2', function (e) {
                 const data = e.params.data;
@@ -249,9 +305,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const price    = parseFloat(row.querySelector('.price-value').value) || 0;
             const otc      = parseFloat(row.querySelector('.otc-value').value) || 0;
             const duration = parseInt(row.querySelector('.duration-input').value) || 1;
-            if (price > 0) {
-                total += ppn(price) * duration + ppn(otc);
-            }
+            if (price > 0) total += ppn(price) * duration + ppn(otc);
         });
         document.getElementById('grandTotal').textContent = fmt(total);
     }
@@ -264,7 +318,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Durasi & OTC input
+    // Perubahan durasi & OTC
     document.addEventListener('input', function(e) {
         if (e.target.classList.contains('duration-input')) {
             updateRow(e.target.closest('.calculator-row'));
@@ -280,12 +334,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Tambah baris (init Select2 HANYA baris baru)
+    // Tambah baris
     document.getElementById('addRow').addEventListener('click', function() {
         const frag = document.querySelector('#row-template').content.cloneNode(true);
-        const newRow = frag.querySelector('tr.calculator-row');  // ambil tr dari template
+        const newRow = frag.querySelector('tr.calculator-row');
 
-        // (opsional) copy kategori dari baris terakhir biar enak
         const lastCat = document.querySelector('#calculatorRows .calculator-row:last-child .category-select');
         if (lastCat && newRow.querySelector('.category-select')) {
             newRow.querySelector('.category-select').value = lastCat.value;
@@ -295,7 +348,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const appendedRow = document.querySelector('#calculatorRows .calculator-row:last-child');
 
         renumberRows();
-        initSelect2ForRow(appendedRow);   // << WAJIB
+        initSelect2ForRow(appendedRow);
     });
 
     // Hapus baris
@@ -319,7 +372,6 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('resetBtn').addEventListener('click', function() {
         if (!confirm('Apakah Anda yakin ingin reset semua data?')) return;
 
-        // reset semua baris ke default (tanpa hapus)
         document.querySelectorAll('.calculator-row').forEach(row => {
             const $prod = $(row).find('.product-select');
             $prod.val(null).trigger('change');

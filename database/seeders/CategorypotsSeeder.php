@@ -1,21 +1,22 @@
 <?php
+
 namespace Database\Seeders;
+
 use Illuminate\Database\Seeder;
 use App\Models\Category;
+use Illuminate\Support\Carbon;
 
-class CategorypotsSeeder extends Seeder
+class CategorypotsSeeder extends Seeder   // <--- ganti sesuai perintah artisan
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        $categories = [
-            ['nama_category' => 'INDIBIZ'],
-            ['nama_category' => 'ADDON'],
-        ];
-        foreach ($categories as $category) {
-            Categorypots::create($category);
-        }
+        $now = Carbon::now();
+
+        Category::firstOrCreate(['nama_category' => 'INDIBIZ']);
+        Category::firstOrCreate(['nama_category' => 'ADD ON']);
+
+        // update timestamp biar rapi
+        Category::where('nama_category', 'ADD ON')
+                ->update(['updated_at' => $now]);
     }
 }
