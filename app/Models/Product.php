@@ -10,17 +10,12 @@ class Product extends Model
     protected $primaryKey = 'id';
     public $incrementing = true;
     protected $keyType = 'int';
-    protected $fillable = [
-        'category_id',
-        'nama_product',
-        'price'
-    ];
-    protected $casts = [
-        'price' => 'decimal:2'
-    ];
+    protected $fillable = ['category_id', 'nama_product', 'price' ];
+    protected $casts = [ 'price' => 'decimal:2' ];
+    
     public function category()
     {
-        return $this->belongsTo(Category::class, 'category_id', 'category_id');
+        return $this->belongsTo(Category::class, 'category_id');
     }
     public function otcs()
     {
