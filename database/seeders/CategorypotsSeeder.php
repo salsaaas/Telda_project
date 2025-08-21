@@ -3,20 +3,23 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\Category;
-use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 
-class CategorypotsSeeder extends Seeder   // <--- ganti sesuai perintah artisan
+class CategoryPotsSeeder extends Seeder
 {
     public function run(): void
     {
-        $now = Carbon::now();
+        $rows = [
+            ['nama_category' => 'INDIBIZ'],
+            ['nama_category' => 'ADDON'],
+            // tambah kalau perlu
+        ];
 
-        Category::firstOrCreate(['nama_category' => 'INDIBIZ']);
-        Category::firstOrCreate(['nama_category' => 'ADD ON']);
-
-        // update timestamp biar rapi
-        Category::where('nama_category', 'ADD ON')
-                ->update(['updated_at' => $now]);
+        foreach ($rows as $r) {
+            DB::table('categorypots')->updateOrInsert(
+                ['nama_category' => $r['nama_category']],
+                $r
+            );
+        }
     }
 }
