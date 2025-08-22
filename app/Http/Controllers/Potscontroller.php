@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Category;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class PotsController extends Controller
 {
@@ -58,4 +59,17 @@ class PotsController extends Controller
 
         return response()->json($items);
     }
+
+    public function printPdf(Request $request)
+{
+    $title = $request->input('calculationTitle', 'Kalkulator Pots');
+    $items = json_decode($request->input('items', '[]'), true);
+
+    $pdf = Pdf::loadView('pdf.pots', [
+        'title' => $title,
+        'items' => $items
+    ])->setPaper('a4', 'landscape');
+
+    return $pdf->download($title . '_' . now()->format('Ymd_His') . '.pdf');
+}
 }

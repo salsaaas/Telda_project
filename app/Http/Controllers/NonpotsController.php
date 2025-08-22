@@ -22,47 +22,57 @@ class NonpotsController extends Controller
         }
         
 
-        public function printPdf(Request $request)
-        {
-            $raw = $request->input('payload');
-            $data = is_string($raw) ? (json_decode($raw, true) ?: []) : [];
-        
-            $title   = $data['title'] ?? 'Quotation';
-            $inItems = $data['items'] ?? [];
-        
-            $items = collect($inItems)->map(function ($it) {
-                $product = \App\Models\Product::with('category', 'otcs')->find($it['product_id']);
-                return [
-                    'category_name' => $product->category->nama_category ?? '',
-                    'product_name'  => $product->nama_product ?? '',
-                    'schema'        => $it['schema'] ?? '',
-                    'qty'           => (int) ($it['qty'] ?? 1),
-                    'duration'      => (int) ($it['duration'] ?? 1),
-                    'price'         => (float) ($it['price'] ?? $product->price ?? 0),
-                    'discount'      => (float) ($it['discount'] ?? 0),
-                    'otc_category'  => $product->otcs->first()->nama_otc ?? '',
-                    'otc_price'     => (float) ($it['otc_price'] ?? $product->otcs->first()->price_OTC ?? 0),
-                    'otc_discount'  => (float) ($it['otc_discount'] ?? 0),
-                ];
-            });
-        
-            // hitung grand total
-            $grandTotal = $items->reduce(function ($carry, $it) {
-                $line = ($it['price'] * $it['qty'] * $it['duration']) * (1 - $it['discount']/100);
-                $line += $it['otc_price'] * (1 - $it['otc_discount']/100);
-                return $carry + $line;
-            }, 0);
-        
-            $pdf = Pdf::loadView('nonpots.pdf', [
-                'title'        => $title,
-                'items'        => $items,
-                'grand_total'  => $grandTotal,
-                'generated_at' => now()->format('d/m/Y H:i:s'),
-            ])->setPaper('A4', 'landscape');
-        
-            return $pdf->download('Kalkulator_Paket_'.str_replace(' ', '_', $title).'_'.now()->format('Ymd_His').'.pdf');
-        }
-        
+    public function printPdf(Request $request)
+{
+    // payload bisa berupa hidden input 'payload' (JSON string)
+    $raw = $request->input('payload');
+    $data = is_string($raw) ? (json_decode($raw, true) ?: []) : [];
+    $title   = $data['title'] ?? 'Quotation';
+    $inItems = $data['items'] ?? [];
+
+
+
+    // Ambil nama kategori & produk dari DB untuk dipetakan
+    
+    $prodMap = \App\Models\Product ::pluck('nama_product',  'id')->toArray();
+    $catMap = \App\Models\Category::pluck('nama_category', 'category_id')->toArray(); // perbaikan key
+
+    $items = [];
+    foreach ($inItems as $it) {
+        $categoryId = $it['category_id'] ?? null;
+        $items[] = [
+            'category_name' => $it['category_name'] 
+                               ?? ($categoryId && isset($catMap[$categoryId]) ? $catMap[$categoryId] : '-'),
+            'product_name'  => $it['product_name'] ?? ($prodMap[$it['product_id'] ?? null] ?? '-'),
+            'schema'        => $it['schema'] ?? ($it['skema'] ?? ''),
+            'qty'           => (int) ($it['qty'] ?? 1),
+            'duration'      => (int) ($it['duration'] ?? 1),
+            'price'         => (float) ($it['price'] ?? 0),
+            'discount'      => (float) ($it['discount'] ?? 0),
+            'otc_category'  => $it['otc_category'] ?? ($it['skema'] ?? ''),
+            'otc_price'     => (float) ($it['otc_price'] ?? ($it['otc'] ?? 0)),
+            'otc_discount'  => (float) ($it['otc_discount'] ?? ($it['disc_otc'] ?? 0)),
+        ];
+    }
+
+    // Grand total (pakai rumus yang sama dengan Blade agar konsisten)
+    $grandTotal = 0;
+    foreach ($items as $it) {
+        $line = ($it['price'] * $it['qty'] * $it['duration']) * (1 - $it['discount']/100);
+        $line += $it['otc_price'] * (1 - $it['otc_discount']/100);
+        $grandTotal += $line;
+    }
+
+    $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('nonpots.pdf', [
+        'title'        => $title,
+        'items'        => $items,
+        'grand_total'  => $grandTotal,
+        'generated_at' => now()->format('d/m/Y H:i:s'),
+    ])->setPaper('A4', 'landscape');
+
+    return $pdf->download('Kalkulator_Paket_'.str_replace(' ', '_', $title).'_'.now()->format('Ymd_His').'.pdf');
+}
+
 
 
     public function save(Request $request)

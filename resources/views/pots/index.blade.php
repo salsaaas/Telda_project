@@ -58,9 +58,10 @@
                         <tr class="calculator-row">
                             <td>
                                 <select name="items[0][category_id]" class="form-select category-select" required>
-                                    @foreach($categories as $category)
-                                       @echo(dd($category)) <option value="{{ $category->category_id }}">{{ $category->nama_category }}</option>
-                                    @endforeach
+                                @foreach($categories as $category)
+                                    <option value="{{ $category->category_id }}">{{ $category->nama_category }}</option>
+                                @endforeach
+
                                 </select>
                             </td>
                             <td>
@@ -106,7 +107,7 @@
                     <button type="button" class="btn btn-secondary me-2" id="resetBtn">
                         <i class="fas fa-undo"></i> Reset
                     </button>
-                    <button type="button" class="btn btn-navy" id="printPdfBtn">
+                    <button type="button" class="btn btn-navy" id="printPdfBtn" data-print-url="{{ route('pots.print-pdf') }}">
                         <i class="fas fa-file-pdf"></i> Print PDF
                     </button>
                 </div>
@@ -159,51 +160,6 @@
 </template>
 @endsection
 
-{{-- Samakan tampilan dengan Non-Pots / hindari “nabrak garis” --}}
-<style>
-  /* Sembunyikan search box pada dropdown Select2 */
-  .select2-dropdown.no-search .select2-search--dropdown { display: none !important; }
-
-  /* Sel tabel rata tengah vertikal */
-  #calculatorTable th, #calculatorTable td { vertical-align: middle; }
-
-  /* Tinggi kontrol disetarakan dengan Bootstrap (≈38px) */
-  :root { --input-h: 38px; }
-
-  /* Input & select native */
-  #calculatorTable .form-select,
-  #calculatorTable .form-control {
-    height: var(--input-h);
-    padding-top: .375rem;
-    padding-bottom: .375rem;
-  }
-
-  /* Select2 mengikuti tinggi Bootstrap */
-  .select2-container { width: 100% !important; }
-  .select2-container--default .select2-selection--single {
-    height: var(--input-h);
-    border: 1px solid #ced4da;
-    border-radius: .375rem;
-  }
-  .select2-container--default .select2-selection--single .select2-selection__rendered {
-    line-height: calc(var(--input-h) - 2px);   /* center teks */
-    padding-left: .75rem;
-    padding-right: 2.25rem;                    /* ruang untuk arrow/clear */
-  }
-  .select2-container--default .select2-selection--single .select2-selection__arrow {
-    height: var(--input-h);
-    right: .5rem;
-  }
-  .select2-container--default .select2-selection--single .select2-selection__clear {
-    height: var(--input-h);
-    line-height: var(--input-h);
-  }
-
-  /* Kolom Product Name rata kiri (lainnya tetap center) */
-  #calculatorTable th:nth-child(2),
-  #calculatorTable td:nth-child(2) { text-align: left; }
-</style>
-
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -224,6 +180,8 @@ document.addEventListener('DOMContentLoaded', function() {
             allowClear: true,
             minimumInputLength: 0,
             dropdownCssClass: 'no-search',
+            minimumResultsForSearch: Infinity,
+
             ajax: {
                 url: '{{ route("potproducts.byCategory") }}',
                 delay: 0,
@@ -301,7 +259,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function updateGrandTotal() {
         let total = 0;
-        document.querySelectorAll('.calculator-row').forEach(row => {
+        document.querySelectorAll('#calculatorRows .calculator-row').forEach(row => { 
+
             const price    = parseFloat(row.querySelector('.price-value').value) || 0;
             const otc      = parseFloat(row.querySelector('.otc-value').value) || 0;
             const duration = parseInt(row.querySelector('.duration-input').value) || 1;
@@ -388,6 +347,57 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         updateGrandTotal();
     });
+
+            // Print PDF
+        document.getElementById('printPdfBtn').addEventListener('click', function() {
+            const url = this.dataset.printUrl;
+            const title = document.getElementById('calculationTitle').value || 'Kalkulator Pots';
+
+            // Ambil data dari form (items per row)
+            const items = [];
+            document.querySelectorAll('#calculatorRows .calculator-row').forEach((row, idx) => {
+                items.push({
+                    category_id: row.querySelector('.category-select')?.value || '',
+                    product_id: row.querySelector('.product-select')?.value || '',
+                    otc_category: row.querySelector('.otc-select')?.value || '',
+                    price: row.querySelector('.price-value')?.value || 0,
+                    otc: row.querySelector('.otc-value')?.value || 0,
+                    duration: row.querySelector('.duration-input')?.value || 1,
+                });
+            });
+
+            // Buat form dinamis POST
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = url;
+            form.target = '_blank';
+
+            // CSRF
+            const csrf = document.querySelector('meta[name="csrf-token"]').content;
+            const inputCsrf = document.createElement('input');
+            inputCsrf.type = 'hidden';
+            inputCsrf.name = '_token';
+            inputCsrf.value = csrf;
+            form.appendChild(inputCsrf);
+
+            // Title
+            const inputTitle = document.createElement('input');
+            inputTitle.type = 'hidden';
+            inputTitle.name = 'calculationTitle';
+            inputTitle.value = title;
+            form.appendChild(inputTitle);
+
+            // Items
+            const inputItems = document.createElement('input');
+            inputItems.type = 'hidden';
+            inputItems.name = 'items';
+            inputItems.value = JSON.stringify(items);
+            form.appendChild(inputItems);
+
+            document.body.appendChild(form);
+            form.submit();
+            form.remove();
+        });
 
     // Init baris pertama
     initSelect2ForRow(document.querySelector('.calculator-row'));

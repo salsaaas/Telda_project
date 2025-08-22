@@ -152,7 +152,7 @@
                 @endphp
                 <tr>
                 <td>{{ $i + 1 }}</td>
-                <td>{{ $category }}</td>
+                <td>{{ $row['category_name'] }}</td>
                 <td class="text-left">{{ $product }}</td>
                 <td>{{ $schema }}</td>
                 <td>{{ $qty }}</td>

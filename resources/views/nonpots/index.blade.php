@@ -323,27 +323,24 @@ document.addEventListener('DOMContentLoaded', () => {
       const finalWithPPN       = monthlyWithPPN * duration + withPPN(otcAfterDiscount * qty);
 
       items.push({
-        // label
-        category_product : catSel?.options[catSel.selectedIndex]?.text?.trim() || '',
+        category_id      : catSel?.value || null,
+        category_name    : catSel?.options[catSel.selectedIndex]?.text?.trim() || '',
         product_name     : prodSel?.options[prodSel.selectedIndex]?.text?.trim() || '',
         schema           : skemaSel?.options[skemaSel.selectedIndex]?.text?.trim() || '',
-
-        // angka input
-        qty, duration,
+        qty,
+        duration,
         price            : basePrice,
         discount         : dPricePct,
         otc_category     : skemaSel?.options[skemaSel.selectedIndex]?.text?.trim() || '',
         otc_price        : otc,
         otc_discount     : dOtcPct,
-
-        // angka hitung (agar PDF match UI)
         price_after_discount : priceAfterDiscount,
         otc_after_discount   : otcAfterDiscount,
         monthly_with_ppn     : monthlyWithPPN,
         final_with_ppn       : finalWithPPN,
         ppn_rate             : 11
-      });
     });
+});
 
     // hidden payload
     let payload = form.querySelector('input[name="payload"]');
@@ -353,6 +350,13 @@ document.addEventListener('DOMContentLoaded', () => {
       payload.name = 'payload';
       form.appendChild(payload);
     }
+    console.log('Items to print:', items);
+    
+    if (items.length === 0) {
+    alert('Tambahkan minimal satu item sebelum mencetak PDF.');
+    return;
+    }
+
     payload.value = JSON.stringify({
       title: document.getElementById('calculationTitle').value || '',
       items
