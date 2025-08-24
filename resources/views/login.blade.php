@@ -130,12 +130,13 @@
             <div class="mb-3">
                 <label for="password" class="form-label d-flex justify-content-between align-items-center">
                     <span>Password</span>
-                    <a href="#" class="text-danger small text-decoration-none">Lupa kata sandi?</a>
+                    <!-- Link lupa password -->
+                    <a href="{{ route('password.request') }}" class="text-danger small text-decoration-none">Lupa kata sandi?</a>
                 </label>
                 <div class="input-group">
                     <input type="password" name="password" id="password"
                         class="form-control rounded-3 py-2 px-3" placeholder="Masukkan password" required>
-                    <span class="input-group-text bg-white border-start-0" onclick="togglePassword()" style="cursor: pointer;">
+                    <span class="input-group-text bg-white border-start-0" id="togglePassword" style="cursor: pointer;">
                         <i class="fas fa-eye-slash" id="toggleIcon"></i>
                     </span>
                 </div>
@@ -155,4 +156,20 @@
     </div>
 
 </div>
+
+<!-- Script untuk toggle password -->
+<script>
+    const togglePassword = document.querySelector('#togglePassword');
+    const passwordInput = document.querySelector('#password');
+    const toggleIcon = document.querySelector('#toggleIcon');
+
+    togglePassword.addEventListener('click', function () {
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+
+        // ganti icon
+        toggleIcon.classList.toggle('fa-eye');
+        toggleIcon.classList.toggle('fa-eye-slash');
+    });
+</script>
 @endsection

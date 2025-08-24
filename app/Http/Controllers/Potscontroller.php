@@ -63,13 +63,50 @@ class PotsController extends Controller
     public function printPdf(Request $request)
 {
     $title = $request->input('calculationTitle', 'Kalkulator Pots');
-    $items = json_decode($request->input('items', '[]'), true);
+    $inItems = json_decode($request->input('items', '[]'), true);
 
-    $pdf = Pdf::loadView('pdf.pots', [
-        'title' => $title,
-        'items' => $items
+    // 🔹 Ambil nama produk & kategori dari database
+    $prodMap = Product::pluck('nama_product', 'id')->toArray();
+    $catMap  = Category::pluck('nama_category', 'category_id')->toArray();
+
+    // 🔹 Proses item agar punya product_name & category_name
+    $items = [];
+    foreach ($inItems as $it) {
+        $categoryId = $it['category_id'] ?? null;
+        $items[] = [
+            'category_name' => $it['category_name'] 
+                               ?? ($categoryId && isset($catMap[$categoryId]) ? $catMap[$categoryId] : '-'),
+            'product_name'  => $it['product_name'] 
+                               ?? ($prodMap[$it['product_id'] ?? null] ?? '-'),
+            'schema'        => $it['schema'] ?? ($it['skema'] ?? ''),
+            'qty'           => (int) ($it['qty'] ?? 1),
+            'duration'      => (int) ($it['duration'] ?? 1),
+            'price'         => (float) ($it['price'] ?? 0),
+            'discount'      => (float) ($it['discount'] ?? 0),
+            'otc_category'  => $it['otc_category'] ?? ($it['skema'] ?? ''),
+            'otc_price'     => (float) ($it['otc_price'] ?? ($it['otc'] ?? 0)),
+            'otc_discount'  => (float) ($it['otc_discount'] ?? ($it['disc_otc'] ?? 0)),
+        ];
+    }
+
+    // 🔹 Hitung Grand Total (biar konsisten sama versi nonpots)
+    $grandTotal = 0;
+    foreach ($items as $it) {
+        $line = ($it['price'] * $it['qty'] * $it['duration']) * (1 - $it['discount'] / 100);
+        $line += $it['otc_price'] * (1 - $it['otc_discount'] / 100);
+        $grandTotal += $line;
+    }
+
+    // 🔹 Generate PDF
+    $pdf = Pdf::loadView('pots.pdfpots', [
+        'title'        => $title,
+        'items'        => $items,
+        'grand_total'  => $grandTotal,
+        'generated_at' => now()->format('d/m/Y H:i:s'),
     ])->setPaper('a4', 'landscape');
 
-    return $pdf->download($title . '_' . now()->format('Ymd_His') . '.pdf');
+    return $pdf->download(
+        str_replace(' ', '_', $title) . '_' . now()->format('Ymd_His') . '.pdf'
+    );
 }
 }
