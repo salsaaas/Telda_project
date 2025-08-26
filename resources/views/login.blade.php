@@ -6,7 +6,7 @@
 <style>
     body.login-page {
         margin: 0;
-        background-color: #7A1C1C !important;
+        background-color: #1e3a8a !important;
         color: white;
     }
 
@@ -32,13 +32,13 @@
 
     .top-bar .brand span {
         font-weight: 600;
-        color: black;
+        color: white;
         font-size: 1.2rem;
     }
 
     .top-bar .btn-register {
-        background-color: #EF5350;
-        color: black;
+        background-color: #1e3a8a;
+        color: white;
         font-weight: 600;
         border-radius: 999px;
         border: none;
@@ -62,7 +62,7 @@
 
     .login-card {
         background-color: white;
-        border: 1px solid #C62828;
+        border: 1px solid #1e3a8a;
         border-radius: 10px;
         padding: 30px;
         max-width: 50%;
@@ -73,13 +73,13 @@
     }
 
     .btn-login {
-        background-color: #C62828;
+        background-color: #1e3a8a;
         color: white;
         border: none;
     }
 
     .btn-login:hover {
-        background-color: #a32121;
+        background-color: #1e3a8a;
     }
 
     @media (min-width: 768px) {

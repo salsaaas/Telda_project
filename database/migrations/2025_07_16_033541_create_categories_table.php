@@ -17,8 +17,6 @@ return new class extends Migration
 
             $table->timestamps();
 
-            // (Opsional) Tambah index untuk pencarian cepat
-            $table->index('nama_category', 'idx_categories_nama_category');
         });
     }
 

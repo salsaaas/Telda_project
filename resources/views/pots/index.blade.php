@@ -5,9 +5,6 @@
     <div class="card-body mt-2">
         <div class="text-center position-relative mb-3">
             <h4 class="mb-0 fw-bold">Kalkulator Pots</h4>
-            <span class="badge bg-secondary position-absolute end-0 top-50 translate-middle-y">
-                Total Produk: {{ count($products) }}
-            </span>
         </div>
 
         @if(session('success'))
@@ -25,33 +22,20 @@
         <form id="calculatorForm">
             @csrf
             <div class="table-responsive">
-                <table class="table table-bordered text-center" id="calculatorTable" style="min-width:2000px;width:100%;">
-                    <colgroup>
-                        <col style="width:150px">   {{-- Category Product --}}
-                        <col style="width:450px">   {{-- Product Name --}}
-                        <col style="width:180px">   {{-- OTC Category --}}
-                        <col style="width:120px">   {{-- Price (Rp) --}}
-                        <col style="width:120px">   {{-- OTC (Rp) --}}
-                        <col style="width:180px">   {{-- Price + PPN (Rp) --}}
-                        <col style="width:120px">   {{-- Duration (Bulan) --}}
-                        <col style="width:150px">   {{-- Price x Duration (Rp) --}}
-                        <col style="width:180px">   {{-- Final Price no PPN (Rp) --}}
-                        <col style="width:180px">   {{-- Final Price (Rp) --}}
-                        <col style="width:100px">   {{-- Aksi --}}
-                    </colgroup>
-                    <thead>
+                <table class="table table-bordered text-center" id="calculatorTable" style="min-width:2000px; width:100%;">
+                    <thead class="table-light">
                         <tr>
-                            <th>Category Product</th>
-                            <th>Product Name</th>
-                            <th>OTC Category</th>
-                            <th>Price (Rp)</th>
-                            <th>OTC (Rp)</th>
-                            <th>Price + PPN (Rp)</th>
-                            <th>Duration (Bulan)</th>
-                            <th>Price x Duration (Rp)</th>
-                            <th>Final Price no PPN (Rp)</th>
-                            <th>Final Price (Rp)</th>
-                            <th>Aksi</th>
+                        <th style="min-width: 150px;">Category Product</th>
+                        <th style="min-width: 300px;">Product Name</th>
+                        <th style="min-width: 150px;">OTC Category</th>
+                        <th style="min-width: 120px;">Price (Rp)</th>
+                        <th style="min-width: 120px;">OTC (Rp)</th>
+                        <th style="min-width: 150px;">Nominal PPN (%)</th>
+                        <th style="min-width: 150px;">Duration (Bulan)</th>
+                        <th style="min-width: 150px;">Price + PPN (Rp)</th>
+                        <th style="min-width: 150px;">Final Price no PPN (Rp)</th>
+                        <th style="min-width: 150px;">Final Price (Rp)</th>
+                        <th style="min-width: 150px;">Aksi</th>
                         </tr>
                     </thead>
                     <tbody id="calculatorRows">
@@ -82,7 +66,13 @@
                                 <span class="otc-display">Rp 0</span>
                                 <input type="hidden" name="items[0][otc]" class="otc-value" value="0">
                             </td>
-                            <td><span class="price-with-ppn text-primary">Rp 0</span></td>
+                            <td>
+                                <select name="items[0][ppn]" class="form-select ppn-select" style="width: 100px;">
+                                    <option value="">-</option>
+                                    <option value="0.11" selected>11</option>
+                                    <option value="0.12">12</option>
+                                </select>
+                            </td>
                             <td><input type="number" name="items[0][duration]" class="form-control duration-input" min="1" value="1" required style="width:80px;"></td>
                             <td><span class="price-duration text-info">Rp 0</span></td>
                             <td><span class="final-price-no-ppn text-warning">Rp 0</span></td>
@@ -97,20 +87,22 @@
                 </table>
             </div>
 
-            <div class="d-flex justify-content-between align-items-center mt-4">
-                <button type="button" id="addRow" class="btn btn-success">
-                    <i class="fas fa-plus"></i> Tambah Baris
-                </button>
-                
-                <div class="d-flex align-items-center">
-                    <span class="me-3"><strong>Total Keseluruhan: <span id="grandTotal" class="text-danger">Rp 0</span></strong></span>
-                    <button type="button" class="btn btn-secondary me-2" id="resetBtn">
-                        <i class="fas fa-undo"></i> Reset
-                    </button>
-                    <button type="button" class="btn btn-navy" id="printPdfBtn" data-print-url="{{ route('pots.print-pdf') }}">
-                        <i class="fas fa-file-pdf"></i> Print PDF
-                    </button>
-                </div>
+            <div class="d-flex align-items-center justify-content-start gap-2 mt-2 flex-wrap">
+    <button type="button" class="btn btn-success btn-sm" id="addRowBtn">
+        <i class="fas fa-plus"></i> Tambah Baris
+    </button>
+
+    <span><strong>Total Keseluruhan: <span id="grandTotal" class="text-danger">Rp 0</span></strong></span>
+
+    <button type="button" class="btn btn-secondary" id="resetBtn">
+        <i class="fas fa-undo"></i> Reset
+    </button>
+
+    <button type="button" class="btn btn-navy" id="printPdfBtn" data-print-url="{{ route('nonpots.print-pdf') }}">
+        <i class="fas fa-file-pdf"></i> Print PDF
+    </button>
+</div>
+
             </div>
         </form>
     </div>

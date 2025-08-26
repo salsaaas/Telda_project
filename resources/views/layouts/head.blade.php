@@ -13,9 +13,9 @@
 
     <style>
         :root {
-            --telkom-primary: #e60000;
-            --telkom-dark: #cc0000;
-            --telkom-light: #ff4d4d;
+            --telkom-primary: #1e3a8a;
+            --telkom-dark: #1e40af;
+            --telkom-light: #3b82f6;
         }
 
         /* Custom styling seperti sebelumnya */

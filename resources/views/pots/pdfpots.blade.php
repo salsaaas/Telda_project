@@ -22,7 +22,7 @@
             text-align: center;
             margin: 16px 0 8px 0;
             font-size: 16px;
-            border-bottom: 1px solid #c6282c;
+            border-bottom: 1px solid #1e3a8a;
             padding-bottom: 10px;   
         }
 
@@ -38,7 +38,7 @@
         }
 
         th {
-            background-color: #c6282c; /* Biru tua */
+            background-color: #1e3a8a; /* Biru tua */
             color: white;              /* Teks putih */
             font-weight: bold;
             font-size: 9px;
@@ -75,7 +75,7 @@
         .footer {
             margin-top: 40px;
             padding-top: 8px;
-            border-top: 1px solid #c6282c;
+            border-top: 1px solid #1e3a8a;
             text-align: center;
             font-size: 8px;
             color: #555;
@@ -87,8 +87,8 @@
             padding: 10px 20px;
             display: inline-block;
             float: right;
-            border: 2px solid #c6282c;
-            color: #c6282c;
+            border: 2px solid #1e3a8a;
+            color: #1e3a8a;
             font-weight: bold;
             font-size: 12px;
         }

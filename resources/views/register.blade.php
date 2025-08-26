@@ -6,7 +6,7 @@
 <style>
     body.register-page {
         margin: 0;
-        background-color: #7A1C1C !important;
+        background-color: #1e3a8a !important;
         color: white;
     }
 
@@ -37,8 +37,8 @@
     }
 
     .top-bar .btn-login {
-        background-color: #EF5350;
-        color: black;
+        background-color: #1e3a8a;
+        color: white;
         font-weight: 600;
         border-radius: 999px;
         border: none;
@@ -62,7 +62,7 @@
 
     .login-card {
         background-color: white;
-        border: 1px solid #C62828;
+        border: 1px solid #1e3a8a;
         border-radius: 10px;
         padding: 30px;
         max-width: 50%;
@@ -73,13 +73,13 @@
     }
 
     .btn-register-submit {
-        background-color: #C62828;
+        background-color: #1e3a8a;
         color: white;
         border: none;
     }
 
     .btn-register-submit:hover {
-        background-color: #a32121;
+        background-color: #1e3a8a;
     }
 
     @media (min-width: 768px) {
@@ -125,6 +125,12 @@
                 <input type="text" name="name" id="name"
                        class="form-control rounded-3 py-2 px-3"
                        placeholder="Masukan nama lengkap" required autofocus>
+            </div>
+
+            <!-- NIK -->
+            <div class="mb-3">
+                <label for="nik" class="form-label">Nomor Induk Karyawan</label>
+                <input type="text" name="nik" id="nik" class="form-control" placeholder="Masukkan NIK" required>
             </div>
 
             <!-- Email -->

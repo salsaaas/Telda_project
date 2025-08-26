@@ -62,7 +62,7 @@
 <!-- Sidebar -->
 <nav id="sidebar" class="sidebar shadow-sm">
     <div class="p-4">
-        <h5 class="fw-bold text-danger">Menu</h5>
+        <h5 class="fw-bold text-primary">Menu</h5>
         <ul class="nav flex-column mt-3">
             <li class="nav-item mb-2">
                 <a href="{{ route('nonpots.index') }}" class="nav-link text-dark">

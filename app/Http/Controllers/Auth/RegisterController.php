@@ -19,8 +19,10 @@ class RegisterController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
+            'nik' => 'required|string|max:20',
             'email' => 'required|string|email|unique:users',
             'password' => 'required|string|min:6|confirmed',
+            
         ]);
 
         if ($validator->fails()) {
@@ -29,8 +31,10 @@ class RegisterController extends Controller
 
         $user = User::create([
             'name' => $request->name,
+            'nik' => $data['nik'],
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            
         ]);
 
         Auth::login($user);

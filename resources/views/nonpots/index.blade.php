@@ -5,9 +5,6 @@
     <div class="card-body mt-2">
         <div class="text-center position-relative mb-3">
             <h4 class="mb-0 fw-bold">Kalkulator Non-Pots</h4>
-            <span class="badge bg-secondary position-absolute end-0 top-50 translate-middle-y">
-                Total Produk: {{ count($products) }}
-            </span>
         </div>
 
         @if(session('success'))
@@ -41,8 +38,8 @@
                             <th style="min-width: 120px;">Duration (Bulan)</th>
                             <th style="min-width: 120px;">OTC (setelah disc)</th>
                             <th style="min-width: 150px;">Monthly Price</th>
+                            <th style="min-width: 150px;">Nominal PPN (%)</th>
                             <th style="min-width: 180px;">Monthly Price with PPN</th>
-                            <th style="min-width: 150px;">Year Price</th>
                             <th style="min-width: 180px;">Final Price with PPN</th>
                             <th style="min-width: 100px;">Aksi</th>
                         </tr>
@@ -57,7 +54,6 @@
                                     @endforeach
                                 </select>
                             </td>
-
                             <td>
                                 <select name="items[0][product_id]" class="form-select product-select" required>
                                     <option value="">-</option>
@@ -70,7 +66,6 @@
                                     @endforeach
                                 </select>
                             </td>
-
                             <td>
                                 <select name="items[0][skema]" class="form-select otc-select" required>
                                     <option value="">-</option>
@@ -78,39 +73,51 @@
                                     <option value="OTC PERBULAN" data-price="2500000">OTC PERBULAN</option>
                                 </select>
                             </td>
-
                             <td>
                                 <input type="number" name="items[0][qty]" class="form-control qty-input" value="1" min="1" required>
                             </td>
-
                             <td>
                                 <span class="price-display">Rp 0</span>
                                 <input type="hidden" name="items[0][price]" class="price-value" value="0">
                             </td>
-
                             <td>
                                 <span class="otc-display">Rp 0</span>
                                 <input type="hidden" name="items[0][otc]" class="otc-value" value="0">
                             </td>
-
                             <td>
                                 <input type="number" name="items[0][disc_price]" class="form-control disc-price" value="0" min="0" max="100">
                             </td>
                             <td>
                                 <input type="number" name="items[0][disc_otc]" class="form-control disc-otc" value="0" min="0" max="100">
                             </td>
-
-                            <td><span class="price-times-discount">Rp 0</span></td>
-                            <td><span class="otc-times-discount">Rp 0</span></td>
-
-                            <td><input type="number" name="items[0][duration]" class="form-control duration-input" min="1" value="1" required style="width: 80px;"></td>
-
-                            <td><span class="monthly-otc">Rp 0</span></td>
-                            <td><span class="monthly-price">Rp 0</span></td>
-                            <td><span class="monthly-price-ppn">Rp 0</span></td>
-                            <td><span class="yearly-price">Rp 0</span></td>
-                            <td><span class="final-price-ppn text-success">Rp 0</span></td>
-
+                            <td>
+                              <span class="price-times-discount">Rp 0</span>
+                            </td>
+                            <td>
+                              <span class="otc-times-discount">Rp 0</span>
+                            </td>
+                            <td>
+                              <input type="number" name="items[0][duration]" class="form-control duration-input" min="1" value="1" required>
+                            </td>
+                            <td>
+                              <span class="monthly-otc">Rp 0</span>
+                            </td>
+                            <td>
+                              <span class="monthly-price">Rp 0</span>
+                            </td>
+                            <td>
+                                <select name="items[0][ppn]" class="form-select ppn-select" style="width: 100px;">
+                                    <option value="">-</option>
+                                    <option value="0.11" selected>11</option>
+                                    <option value="0.12">12</option>
+                                </select>
+                            </td>
+                            <td>
+                              <span class="monthly-price-ppn">Rp 0</span>
+                            </td>
+                            <td>
+                              <span class="final-price-ppn text-success">Rp 0</span>
+                            </td>
                             <td>
                                 <button type="button" class="btn btn-danger btn-sm remove-row">
                                     <i class="fas fa-trash"></i> Hapus
