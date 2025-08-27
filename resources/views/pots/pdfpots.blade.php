@@ -122,7 +122,7 @@
 
                 @forelse($items as $i => $row)
                     @php
-                        $ppnRate = isset($row['ppn_rate']) ? (float)$row['ppn_rate'] : 11;
+                    $ppnRate = isset($row['ppn_rate']) ? ((float)$row['ppn_rate'] / 100) : 0.11;
 
                         $category = $row['category_name'] ?? '-';
                         $product  = $row['product_name'] ?? '-';
@@ -131,10 +131,11 @@
                         $price    = (float) ($row['price'] ?? 0);
                         $otc      = (float) ($row['otc_price'] ?? 0);
 
-                        $priceWithPPN   = $price * 1.11;
+                        $priceWithPPN   = $price * (1 + $ppnRate);
                         $priceDuration  = $priceWithPPN * $duration;
                         $finalNoPPN     = ($price * $duration) + $otc;
-                        $finalWithPPN   = $priceDuration + $otc;
+                        $finalWithPPN   = ($price * (1 + $ppnRate) * $duration) + ($otc * (1 + $ppnRate));
+
 
                         $grandTotal += $finalWithPPN;
                     @endphp

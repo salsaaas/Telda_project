@@ -74,7 +74,7 @@
                                 </select>
                             </td>
                             <td><input type="number" name="items[0][duration]" class="form-control duration-input" min="1" value="1" required style="width:80px;"></td>
-                            <td><span class="price-duration text-info">Rp 0</span></td>
+                            <td><span class="price-with-ppn text-primary">Rp 0</span></td>
                             <td><span class="final-price-no-ppn text-warning">Rp 0</span></td>
                             <td><span class="final-price text-success">Rp 0</span></td>
                             <td>
@@ -138,9 +138,15 @@
             <span class="otc-display">Rp 0</span>
             <input type="hidden" name="items[0][otc]" class="otc-value" value="0">
         </td>
-        <td><span class="price-with-ppn text-primary">Rp 0</span></td>
+        <td>
+            <select name="items[0][ppn]" class="form-select ppn-select" style="width: 100px;">
+                <option value="">-</option>
+                <option value="0.11" selected>11</option>
+                <option value="0.12">12</option>
+            </select>
+        </td>
         <td><input type="number" name="items[0][duration]" class="form-control duration-input" min="1" value="1" required style="width:80px;"></td>
-        <td><span class="price-duration text-info">Rp 0</span></td>
+        <td><span class="price-with-ppn text-primary">Rp 0</span></td>
         <td><span class="final-price-no-ppn text-warning">Rp 0</span></td>
         <td><span class="final-price text-success">Rp 0</span></td>
         <td>
@@ -156,7 +162,6 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const fmt = n => 'Rp ' + new Intl.NumberFormat('id-ID').format(Math.round(n || 0));
-    const ppn = x => x * 1.11;
 
     function initSelect2ForRow(row) {
         const $row = $(row);
@@ -231,35 +236,39 @@ document.addEventListener('DOMContentLoaded', function() {
             });
     }
 
-    function updateRow(row) {
-        const price    = parseFloat(row.querySelector('.price-value').value) || 0;
-        const otc      = parseFloat(row.querySelector('.otc-value').value) || 0;
-        const duration = parseInt(row.querySelector('.duration-input').value) || 1;
+            function updateRow(row) {
+            const price    = parseFloat(row.querySelector('.price-value')?.value) || 0;
+            const otc      = parseFloat(row.querySelector('.otc-value')?.value) || 0;
+            const duration = parseInt(row.querySelector('.duration-input')?.value) || 1;
+            const ppnRate  = parseFloat(row.querySelector('.ppn-select')?.value) || 0;
 
-        const priceWithPPN  = ppn(price);
-        const priceDuration = priceWithPPN * duration;
-        const finalNoPPN    = (price * duration) + otc;
-        const finalPrice    = priceDuration + ppn(otc);
+            const priceWithPPN  = price + (price * ppnRate);
+            const priceDuration = priceWithPPN * duration;
+            const finalNoPPN    = (price * duration) + otc;
+            const finalPrice = (price * duration * (1 + ppnRate)) + otc;
 
-        row.querySelector('.price-with-ppn').textContent     = fmt(priceWithPPN);
-        row.querySelector('.price-duration').textContent     = fmt(priceDuration);
-        row.querySelector('.final-price-no-ppn').textContent = fmt(finalNoPPN);
-        row.querySelector('.final-price').textContent        = fmt(finalPrice);
+            row.querySelector('.price-with-ppn').textContent     = fmt(priceWithPPN);
+            row.querySelector('.final-price-no-ppn').textContent = fmt(finalNoPPN);
+            row.querySelector('.final-price').textContent        = fmt(finalPrice);
 
-        updateGrandTotal();
-    }
+            updateGrandTotal();
+        }
 
-    function updateGrandTotal() {
-        let total = 0;
-        document.querySelectorAll('#calculatorRows .calculator-row').forEach(row => { 
 
-            const price    = parseFloat(row.querySelector('.price-value').value) || 0;
-            const otc      = parseFloat(row.querySelector('.otc-value').value) || 0;
-            const duration = parseInt(row.querySelector('.duration-input').value) || 1;
-            if (price > 0) total += ppn(price) * duration + ppn(otc);
-        });
-        document.getElementById('grandTotal').textContent = fmt(total);
-    }
+        function updateGrandTotal() {
+    let total = 0;
+    document.querySelectorAll('#calculatorRows .calculator-row').forEach(row => { 
+        const price    = parseFloat(row.querySelector('.price-value')?.value) || 0;
+        const otc      = parseFloat(row.querySelector('.otc-value')?.value) || 0;
+        const duration = parseInt(row.querySelector('.duration-input')?.value) || 1;
+        const ppnRate  = parseFloat(row.querySelector('.ppn-select')?.value) || 0;
+
+        const subtotal = (price * duration) + otc;
+        total += subtotal + (subtotal * ppnRate);
+    });
+    document.getElementById('grandTotal').textContent = fmt(total);
+}
+
 
     function renumberRows() {
         document.querySelectorAll('.calculator-row').forEach((row, idx) => {
@@ -283,10 +292,14 @@ document.addEventListener('DOMContentLoaded', function() {
             row.querySelector('.otc-display').textContent = fmt(otc);
             updateRow(row);
         }
+            if (e.target.classList.contains('ppn-select')) {
+            const row = e.target.closest('.calculator-row');
+            updateRow(row);
+        }
     });
 
     // Tambah baris
-    document.getElementById('addRow').addEventListener('click', function() {
+    document.getElementById('addRowBtn').addEventListener('click', function() {
         const frag = document.querySelector('#row-template').content.cloneNode(true);
         const newRow = frag.querySelector('tr.calculator-row');
 
@@ -297,7 +310,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         document.getElementById('calculatorRows').appendChild(frag);
         const appendedRow = document.querySelector('#calculatorRows .calculator-row:last-child');
-
+ 
         renumberRows();
         initSelect2ForRow(appendedRow);
     });

@@ -116,8 +116,8 @@
                 <th style="width: 5mm;">Duration (Bulan)</th>
                 <th style="width: 15mm;">OTC (setelah disc)</th>
                 <th style="width: 12mm;">Monthly Price</th>
+                <th style="width: 12mm;">Nominal PPN (%)</th>
                 <th style="width: 15mm;">Monthly Price with PPN</th>
-                <th style="width: 12mm;">Year Price</th>
                 <th style="width: 12mm;">Final Price with PPN</th>
             </tr>
         </thead>
@@ -144,7 +144,6 @@
                     $otcDisc = $otc * (1 - $odisc / 100);
                     $monthly = $priceDisc * $qty;
                     $monthlyPPN = $monthly * (1 + $ppnRate / 100);
-                    $yearPrice = $monthly * 12;
                     $totalPrice = $monthlyPPN * $duration;
                     $finalPrice = $totalPrice + $otcDisc;
 
@@ -165,8 +164,8 @@
                 <td>{{ $duration }}</td>
                 <td class="text-right">{{ $rupiah($otcDisc) }}</td>   <!-- OTC setelah disc -->
                 <td class="text-right">{{ $rupiah($monthly) }}</td>
+                <<td>{{ $ppnRate }}%</td>
                 <td class="text-right">{{ $rupiah($monthlyPPN) }}</td>
-                <td class="text-right">{{ $rupiah($yearPrice) }}</td>
                 <td class="text-right">{{ $rupiah($finalPrice) }}</td>
 
                 </tr>

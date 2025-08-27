@@ -187,8 +187,10 @@ document.addEventListener('DOMContentLoaded', () => {
       const priceAfterDisc = basePrice * (1 - dPrice);
       const otcAfterDisc   = otc * (1 - dOtc);
 
-      const monthlyPPN = withPPN(priceAfterDisc * qty);
-      const oneTimePPN = withPPN(otcAfterDisc   * qty);     // PPN juga untuk OTC
+      const ppnRate = parseFloat(row.querySelector('.ppn-select').value) || 0;
+      const monthlyPPN = priceAfterDisc * qty * (1 + ppnRate);
+      const oneTimePPN = otcAfterDisc * qty * (1 + ppnRate);
+     // PPN juga untuk OTC
       total += monthlyPPN * duration + oneTimePPN;
     });
     document.getElementById('grandTotal').textContent = fmt(total);
@@ -201,14 +203,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const otc        = parseFloat(row.querySelector('.otc-value').value) || 0;
     const dPrice     = toPct(row.querySelector('.disc-price').value);
     const dOtc       = toPct(row.querySelector('.disc-otc').value);
+    const ppnRate    = parseFloat(row.querySelector('.ppn-select').value) || 0;
 
     const priceAfterDisc = basePrice * (1 - dPrice);
     const otcAfterDisc   = otc * (1 - dOtc);
 
     const monthly        = priceAfterDisc * qty;
-    const monthlyPPN     = withPPN(monthly);
+    const monthlyPPN     = monthly * (1 + ppnRate);
     const oneTime        = otcAfterDisc * qty;
-    const oneTimePPN     = withPPN(oneTime);
+    const oneTimePPN     = oneTime * (1 + ppnRate)
     const finalPrice     = (monthlyPPN * duration) + oneTimePPN;
 
     // tampilan dasar
@@ -223,7 +226,6 @@ document.addEventListener('DOMContentLoaded', () => {
     row.querySelector('.monthly-otc').textContent          = fmt(oneTime);
     row.querySelector('.monthly-price').textContent        = fmt(monthly);
     row.querySelector('.monthly-price-ppn').textContent    = fmt(monthlyPPN);
-    row.querySelector('.yearly-price').textContent         = fmt(priceAfterDisc * qty * 12);
     row.querySelector('.final-price-ppn').textContent      = fmt(finalPrice);
 
     updateGrandTotal();
@@ -262,6 +264,8 @@ document.addEventListener('DOMContentLoaded', () => {
     row.querySelector('.duration-input').addEventListener('input', () => updateRow(row));
     row.querySelector('.disc-price').addEventListener('input', () => updateRow(row));
     row.querySelector('.disc-otc').addEventListener('input', () => updateRow(row));
+    row.querySelector('.ppn-select').addEventListener('change', () => updateRow(row));
+
   }
 
   // Hapus baris
