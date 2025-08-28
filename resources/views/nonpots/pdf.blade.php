@@ -125,13 +125,12 @@
             @php
                 $grandTotal = 0;
                 $rupiah = fn($v) => number_format((float)$v, 0, ',', '.');
+                // dd($items);
             @endphp
 
             @forelse($items as $i => $row)
                 @php
-                $ppnRate = !empty($row['ppn_rate']) 
-    ? (float)$row['ppn_rate'] 
-    : ((isset($ppn_rate) ? (float)$ppn_rate : 11)); 
+                    $ppnRatePct = array_key_exists('ppn_rate', $row) && is_numeric($row['ppn_rate']) ? (float)$row['ppn_rate'] : 11; 
 
                     $category = !empty($row['category_name']) ? $row['category_name'] : '-';
                     $product = $row['product_name'] ?? $row['product'] ?? '-';
@@ -143,13 +142,15 @@
                     $otc = (float) ($row['otc_price'] ?? $row['otc_harga'] ?? 0);
                     $odisc = (float) ($row['otc_discount'] ?? $row['otc_diskon'] ?? 0);
 
-                    $priceDisc = $price * (1 - $discount / 100);
-                    $otcDisc = $otc * (1 - $odisc / 100);
-                    $monthly = $priceDisc * $qty;
-                    $monthlyPPN = $monthly * (1 + $ppnRate / 100);
-                    $totalPrice = $monthlyPPN * $duration;
-                    $finalPrice = $totalPrice + $otcDisc;
+                    $priceDisc   = $price * (1 - $discount / 100);
+                    $otcDisc     = $otc   * (1 - $odisc    / 100);
+                    $monthly     = $priceDisc * $qty;
+                    $monthlyPPN  = $monthly * (1 + $ppnRatePct / 100);
+                    $totalPrice  = $monthlyPPN * $duration;
 
+                    // Terapkan PPN ke OTC juga:
+                    $otcPPN      = $otcDisc * (1 + $ppnRatePct / 100);
+                    $finalPrice  = $totalPrice + $otcPPN;
                     $grandTotal += $finalPrice;
                 @endphp
                 <tr>
@@ -167,9 +168,7 @@
                 <td>{{ $duration }}</td>
                 <td class="text-right">{{ $rupiah($otcDisc) }}</td>   <!-- OTC setelah disc -->
                 <td class="text-right">{{ $rupiah($monthly) }}</td>
-                <td>{{ $ppnRate }}%</td>
-
-
+                <td>{{ $ppnRatePct }}%</td>
 
 
                 <td class="text-right">{{ $rupiah($monthlyPPN) }}</td>
