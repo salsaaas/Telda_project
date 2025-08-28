@@ -129,7 +129,10 @@
 
             @forelse($items as $i => $row)
                 @php
-                    $ppnRate = isset($row['ppn_rate']) ? (float)$row['ppn_rate'] : ($ppn_rate ?? 11);
+                $ppnRate = !empty($row['ppn_rate']) 
+    ? (float)$row['ppn_rate'] 
+    : ((isset($ppn_rate) ? (float)$ppn_rate : 11)); 
+
                     $category = !empty($row['category_name']) ? $row['category_name'] : '-';
                     $product = $row['product_name'] ?? $row['product'] ?? '-';
                     $schema = $row['schema'] ?? $row['skema'] ?? '-';
@@ -164,7 +167,11 @@
                 <td>{{ $duration }}</td>
                 <td class="text-right">{{ $rupiah($otcDisc) }}</td>   <!-- OTC setelah disc -->
                 <td class="text-right">{{ $rupiah($monthly) }}</td>
-                <<td>{{ $ppnRate }}%</td>
+                <td>{{ $ppnRate }}%</td>
+
+
+
+
                 <td class="text-right">{{ $rupiah($monthlyPPN) }}</td>
                 <td class="text-right">{{ $rupiah($finalPrice) }}</td>
 

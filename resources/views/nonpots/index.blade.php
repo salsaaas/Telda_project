@@ -108,8 +108,8 @@
                             <td>
                                 <select name="items[0][ppn]" class="form-select ppn-select" style="width: 100px;">
                                     <option value="">-</option>
-                                    <option value="0.11" selected>11</option>
-                                    <option value="0.12">12</option>
+                                    <option value="11">11%</option>
+                                    <option value="12">12%</option>
                                 </select>
                             </td>
                             <td>
@@ -150,9 +150,9 @@
 <script>
 document.addEventListener('DOMContentLoaded', () => {
   // ---------- Utils ----------
-  const PPN = 0.11;                               // 11%
+                             // 11%
   const fmt = n => 'Rp ' + new Intl.NumberFormat('id-ID').format(Math.round(n || 0));
-  const withPPN = x => x * (1 + PPN);
+  
   const toPct = v => Math.min(100, Math.max(0, Number(v) || 0)) / 100;
 
   function resetRow(row) {
@@ -187,7 +187,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const priceAfterDisc = basePrice * (1 - dPrice);
       const otcAfterDisc   = otc * (1 - dOtc);
 
-      const ppnRate = parseFloat(row.querySelector('.ppn-select').value) || 0;
+      const ppnRate = (parseFloat(row.querySelector('.ppn-select').value) || 0) / 100;
+
       const monthlyPPN = priceAfterDisc * qty * (1 + ppnRate);
       const oneTimePPN = otcAfterDisc * qty * (1 + ppnRate);
      // PPN juga untuk OTC
@@ -203,7 +204,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const otc        = parseFloat(row.querySelector('.otc-value').value) || 0;
     const dPrice     = toPct(row.querySelector('.disc-price').value);
     const dOtc       = toPct(row.querySelector('.disc-otc').value);
-    const ppnRate    = parseFloat(row.querySelector('.ppn-select').value) || 0;
+    const ppnRate = (parseFloat(row.querySelector('.ppn-select').value) || 0) / 100;
+
 
     const priceAfterDisc = basePrice * (1 - dPrice);
     const otcAfterDisc   = otc * (1 - dOtc);
@@ -318,6 +320,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const catSel   = row.querySelector('.category-select');
       const prodSel  = row.querySelector('.product-select');
       const skemaSel = row.querySelector('.otc-select');
+      const ppnRate  = parseFloat(row.querySelector('.ppn-select').value) || 0;
 
       const qty        = parseInt(row.querySelector('.qty-input').value) || 1;
       const duration   = parseInt(row.querySelector('.duration-input').value) || 1;
@@ -330,8 +333,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const priceAfterDiscount = basePrice * (1 - dPrice);
       const otcAfterDiscount   = otc * (1 - dOtc);
       const monthly            = priceAfterDiscount * qty;
-      const monthlyWithPPN     = withPPN(monthly);
-      const finalWithPPN       = monthlyWithPPN * duration + withPPN(otcAfterDiscount * qty);
+      const monthlyWithPPN = monthly * (1 + ppnRate);
+const finalWithPPN   = (monthlyWithPPN * duration) + (otcAfterDiscount * qty * (1 + ppnRate));
 
       items.push({
         category_id      : catSel?.value || null,
@@ -349,7 +352,7 @@ document.addEventListener('DOMContentLoaded', () => {
         otc_after_discount   : otcAfterDiscount,
         monthly_with_ppn     : monthlyWithPPN,
         final_with_ppn       : finalWithPPN,
-        ppn_rate             : 11
+        ppn_rate             : ppnRate 
     });
 });
 

@@ -98,7 +98,7 @@
         <i class="fas fa-undo"></i> Reset
     </button>
 
-    <button type="button" class="btn btn-navy" id="printPdfBtn" data-print-url="{{ route('nonpots.print-pdf') }}">
+    <button type="button" class="btn btn-navy" id="printPdfBtn" data-print-url="{{ route('pots.print-pdf') }}">
         <i class="fas fa-file-pdf"></i> Print PDF
     </button>
 </div>
@@ -368,6 +368,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     price: row.querySelector('.price-value')?.value || 0,
                     otc: row.querySelector('.otc-value')?.value || 0,
                     duration: row.querySelector('.duration-input')?.value || 1,
+                    ppn: row.querySelector('.ppn-select')?.value || 0, 
                 });
             });
 
