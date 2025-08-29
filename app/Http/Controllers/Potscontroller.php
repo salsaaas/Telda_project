@@ -61,52 +61,65 @@ class PotsController extends Controller
     }
 
     public function printPdf(Request $request)
-{
-    $title = $request->input('calculationTitle', 'Kalkulator Pots');
-    $inItems = json_decode($request->input('items', '[]'), true);
+    {
+        $title   = $request->input('calculationTitle', 'Kalkulator Pots');
+        $inItems = json_decode($request->input('items', '[]'), true) ?: [];
 
-    // 🔹 Ambil nama produk & kategori dari database
-    $prodMap = Product::pluck('nama_product', 'id')->toArray();
-    $catMap  = Category::pluck('nama_category', 'category_id')->toArray();
+        // Peta nama untuk fallback kalau label tidak ikut terkirim
+        $prodMap = Product::pluck('nama_product', 'id')->toArray();
+        $catMap  = Category::pluck('nama_category', 'category_id')->toArray();
 
-    // 🔹 Proses item agar punya product_name & category_name
-    $items = [];
-    foreach ($inItems as $it) {
-        $categoryId = $it['category_id'] ?? null;
-        $items[] = [
-            'category_name' => $it['category_name'] 
-                               ?? ($categoryId && isset($catMap[$categoryId]) ? $catMap[$categoryId] : '-'),
-            'product_name'  => $it['product_name'] 
-                               ?? ($prodMap[$it['product_id'] ?? null] ?? '-'),
-            'schema'        => $it['schema'] ?? ($it['skema'] ?? ''),
-            'qty'           => (int) ($it['qty'] ?? 1),
-            'duration'      => (int) ($it['duration'] ?? 1),
-            'price'         => (float) ($it['price'] ?? 0),
-            'discount'      => (float) ($it['discount'] ?? 0),
-            'otc_category'  => $it['otc_category'] ?? ($it['skema'] ?? ''),
-            'otc_price'     => (float) ($it['otc_price'] ?? ($it['otc'] ?? 0)),
-            'otc_discount'  => (float) ($it['otc_discount'] ?? ($it['disc_otc'] ?? 0)),
-        ];
+        $items = array_map(function ($it) use ($prodMap, $catMap) {
+            $catId  = $it['category_id'] ?? null;
+            $prodId = $it['product_id'] ?? null;
+
+            $ppnDec = isset($it['ppn_rate_dec']) ? (float)$it['ppn_rate_dec']
+                : (isset($it['ppn']) ? (float)$it['ppn'] : 0.0);
+
+            $price    = (float)($it['price']    ?? 0);
+            $duration = (int)  ($it['duration'] ?? 1);
+            $qty      = (int)  ($it['qty']      ?? 1);
+            $otc      = (float)($it['otc_price'] ?? ($it['otc'] ?? 0));
+
+            // Recompute jika tidak ada di payload
+            $price_with_ppn     = $it['price_with_ppn']     ?? ($price * (1 + $ppnDec));
+            $price_duration     = $it['price_duration']     ?? ($price * $duration);
+            $final_price_no_ppn = $it['final_price_no_ppn'] ?? ($price_duration + $otc);
+            $final_price        = $it['final_price']        ?? ($final_price_no_ppn * (1 + $ppnDec)); // PPN juga untuk OTC
+
+            return [
+                'category_id'   => $catId,
+                'category_name' => $it['category_name'] ?? ($catId && isset($catMap[$catId]) ? $catMap[$catId] : '-'),
+                'product_id'    => $prodId,
+                'product_name'  => $it['product_name']  ?? ($prodId && isset($prodMap[$prodId]) ? $prodMap[$prodId] : '-'),
+
+                'price'         => $price,
+                'duration'      => $duration,
+                'qty'           => $qty,
+
+                'otc_category'  => $it['otc_category'] ?? '-',
+                'otc_price'     => $otc,
+
+                'ppn_rate_dec'  => $ppnDec,
+                'ppn_rate_pct'  => $it['ppn_rate_pct'] ?? ($ppnDec * 100),
+
+                'price_with_ppn'     => (float)$price_with_ppn,
+                'price_duration'     => (float)$price_duration,
+                'final_price_no_ppn' => (float)$final_price_no_ppn,
+                'final_price'        => (float)$final_price,
+            ];
+        }, $inItems);
+
+        $grandTotal = array_reduce($items, fn($a, $r) => $a + (float)$r['final_price'], 0.0);
+
+        // Kirim ke view
+        return Pdf::loadView('pots.pdfpots', [
+            'title'        => $title,
+            'items'        => $items,
+            'grand_total'  => $grandTotal,
+            'generated_at' => now()->format('d/m/Y H:i:s'),
+        ])->setPaper('a4', 'landscape')
+        ->download(str_replace(' ', '_', $title) . '_' . now()->format('Ymd_His') . '.pdf');
     }
 
-    // 🔹 Hitung Grand Total (biar konsisten sama versi nonpots)
-    $grandTotal = 0;
-    foreach ($items as $it) {
-        $line = ($it['price'] * $it['qty'] * $it['duration']) * (1 - $it['discount'] / 100);
-        $line += $it['otc_price'] * (1 - $it['otc_discount'] / 100);
-        $grandTotal += $line;
-    }
-
-    // 🔹 Generate PDF
-    $pdf = Pdf::loadView('pots.pdfpots', [
-        'title'        => $title,
-        'items'        => $items,
-        'grand_total'  => $grandTotal,
-        'generated_at' => now()->format('d/m/Y H:i:s'),
-    ])->setPaper('a4', 'landscape');
-
-    return $pdf->download(
-        str_replace(' ', '_', $title) . '_' . now()->format('Ymd_His') . '.pdf'
-    );
-}
 }

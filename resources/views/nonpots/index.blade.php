@@ -320,7 +320,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const catSel   = row.querySelector('.category-select');
       const prodSel  = row.querySelector('.product-select');
       const skemaSel = row.querySelector('.otc-select');
-      const ppnRate  = parseFloat(row.querySelector('.ppn-select').value) || 0;
+      const ppnRatePct = parseFloat(row.querySelector('.ppn-select').value) || 0;
+      const ppnRate    = ppnRatePct / 100;
 
       const qty        = parseInt(row.querySelector('.qty-input').value) || 1;
       const duration   = parseInt(row.querySelector('.duration-input').value) || 1;
@@ -334,7 +335,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const otcAfterDiscount   = otc * (1 - dOtc);
       const monthly            = priceAfterDiscount * qty;
       const monthlyWithPPN = monthly * (1 + ppnRate);
-const finalWithPPN   = (monthlyWithPPN * duration) + (otcAfterDiscount * qty * (1 + ppnRate));
+      const finalWithPPN   = (monthlyWithPPN * duration) + (otcAfterDiscount * qty * (1 + ppnRate));
 
       items.push({
         category_id      : catSel?.value || null,
@@ -352,7 +353,7 @@ const finalWithPPN   = (monthlyWithPPN * duration) + (otcAfterDiscount * qty * (
         otc_after_discount   : otcAfterDiscount,
         monthly_with_ppn     : monthlyWithPPN,
         final_with_ppn       : finalWithPPN,
-        ppn_rate             : ppnRate 
+        ppn_rate             : ppnRatePct, 
     });
 });
 

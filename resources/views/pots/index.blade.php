@@ -68,9 +68,9 @@
                             </td>
                             <td>
                                 <select name="items[0][ppn]" class="form-select ppn-select" style="width: 100px;">
-                                    <option value="">-</option>
-                                    <option value="0.11" selected>11</option>
-                                    <option value="0.12">12</option>
+                                    <option value="" selected>-</option>
+                                    <option value="0.11">11%</option>
+                                    <option value="0.12">12%</option>
                                 </select>
                             </td>
                             <td><input type="number" name="items[0][duration]" class="form-control duration-input" min="1" value="1" required style="width:80px;"></td>
@@ -140,9 +140,9 @@
         </td>
         <td>
             <select name="items[0][ppn]" class="form-select ppn-select" style="width: 100px;">
-                <option value="">-</option>
-                <option value="0.11" selected>11</option>
-                <option value="0.12">12</option>
+                <option value="" selected>-</option>
+                <option value="0.11">11%</option>
+                <option value="0.12">12%</option>
             </select>
         </td>
         <td><input type="number" name="items[0][duration]" class="form-control duration-input" min="1" value="1" required style="width:80px;"></td>
@@ -236,39 +236,37 @@ document.addEventListener('DOMContentLoaded', function() {
             });
     }
 
-            function updateRow(row) {
+    function updateRow(row) {
+        const price    = parseFloat(row.querySelector('.price-value')?.value) || 0;
+        const otc      = parseFloat(row.querySelector('.otc-value')?.value) || 0;
+        const duration = parseInt(row.querySelector('.duration-input')?.value) || 1;
+        const ppnRate  = parseFloat(row.querySelector('.ppn-select')?.value) || 0; // 0.11/0.12
+
+        const priceWithPPN     = price * (1 + ppnRate);          // harga per bulan setelah PPN
+        const priceDuration    = price * duration;               // harga X durasi (belum PPN)
+        const finalNoPPN       = priceDuration + otc;            // tanpa PPN
+        const finalWithPPN     = finalNoPPN * (1 + ppnRate);     // PPN juga untuk OTC
+
+        row.querySelector('.price-with-ppn').textContent     = fmt(priceWithPPN);
+        row.querySelector('.final-price-no-ppn').textContent = fmt(finalNoPPN);
+        row.querySelector('.final-price').textContent        = fmt(finalWithPPN);
+
+        updateGrandTotal();
+        }
+
+        function updateGrandTotal() {
+        let total = 0;
+        document.querySelectorAll('#calculatorRows .calculator-row').forEach(row => {
             const price    = parseFloat(row.querySelector('.price-value')?.value) || 0;
             const otc      = parseFloat(row.querySelector('.otc-value')?.value) || 0;
             const duration = parseInt(row.querySelector('.duration-input')?.value) || 1;
             const ppnRate  = parseFloat(row.querySelector('.ppn-select')?.value) || 0;
 
-            const priceWithPPN  = price + (price * ppnRate);
-            const priceDuration = priceWithPPN * duration;
-            const finalNoPPN    = (price * duration) + otc;
-            const finalPrice = (price * duration * (1 + ppnRate)) + otc;
-
-            row.querySelector('.price-with-ppn').textContent     = fmt(priceWithPPN);
-            row.querySelector('.final-price-no-ppn').textContent = fmt(finalNoPPN);
-            row.querySelector('.final-price').textContent        = fmt(finalPrice);
-
-            updateGrandTotal();
-        }
-
-
-        function updateGrandTotal() {
-    let total = 0;
-    document.querySelectorAll('#calculatorRows .calculator-row').forEach(row => { 
-        const price    = parseFloat(row.querySelector('.price-value')?.value) || 0;
-        const otc      = parseFloat(row.querySelector('.otc-value')?.value) || 0;
-        const duration = parseInt(row.querySelector('.duration-input')?.value) || 1;
-        const ppnRate  = parseFloat(row.querySelector('.ppn-select')?.value) || 0;
-
-        const subtotal = (price * duration) + otc;
-        total += subtotal + (subtotal * ppnRate);
-    });
-    document.getElementById('grandTotal').textContent = fmt(total);
-}
-
+            const base = (price * duration) + otc;
+            total += base * (1 + ppnRate); // PPN juga untuk OTC
+        });
+        document.getElementById('grandTotal').textContent = fmt(total);
+    }
 
     function renumberRows() {
         document.querySelectorAll('.calculator-row').forEach((row, idx) => {
@@ -353,56 +351,92 @@ document.addEventListener('DOMContentLoaded', function() {
         updateGrandTotal();
     });
 
-            // Print PDF
-        document.getElementById('printPdfBtn').addEventListener('click', function() {
-            const url = this.dataset.printUrl;
-            const title = document.getElementById('calculationTitle').value || 'Kalkulator Pots';
+    // Print PDF
+    document.getElementById('printPdfBtn').addEventListener('click', function () {
+        const url   = this.dataset.printUrl;
+        const title = document.getElementById('calculationTitle').value || 'Kalkulator Pots';
 
-            // Ambil data dari form (items per row)
-            const items = [];
-            document.querySelectorAll('#calculatorRows .calculator-row').forEach((row, idx) => {
-                items.push({
-                    category_id: row.querySelector('.category-select')?.value || '',
-                    product_id: row.querySelector('.product-select')?.value || '',
-                    otc_category: row.querySelector('.otc-select')?.value || '',
-                    price: row.querySelector('.price-value')?.value || 0,
-                    otc: row.querySelector('.otc-value')?.value || 0,
-                    duration: row.querySelector('.duration-input')?.value || 1,
-                    ppn: row.querySelector('.ppn-select')?.value || 0, 
-                });
+        const items = [];
+        document.querySelectorAll('#calculatorRows .calculator-row').forEach((row) => {
+            // category (id + nama)
+            const catSel   = row.querySelector('.category-select');
+            const category_id   = catSel?.value || '';
+            const category_name = catSel?.options[catSel.selectedIndex]?.text?.trim() || '';
+
+            // product (id + nama/label dari select2)
+            const $prod     = $(row).find('.product-select');
+            const product_id   = $prod.val() || '';
+            const product_name = ($prod.select2('data')[0]?.text) || $prod.find(':selected').text() || '';
+
+            // OTC (kategori + harga)
+            const otcSel      = row.querySelector('.otc-select');
+            const otc_category = otcSel?.value || '';
+            const otc_price    = parseFloat(otcSel?.selectedOptions?.[0]?.dataset?.price || 0);
+
+            // Nilai dasar
+            const price    = parseFloat(row.querySelector('.price-value')?.value) || 0;
+            const duration = parseInt(row.querySelector('.duration-input')?.value) || 1;
+            const ppnRateDec = parseFloat(row.querySelector('.ppn-select')?.value) || 0; // 0.11 / 0.12
+            const ppnRatePct = Math.round(ppnRateDec * 100); // 11 / 12
+
+            // Hitungan turunan (samakan dengan UI yang tampil)
+            const price_with_ppn     = price * (1 + ppnRateDec);
+            const price_duration     = price * duration;
+            const final_price_no_ppn = price_duration + otc_price;
+            const final_price        = final_price_no_ppn * (1 + ppnRateDec); // PPN juga untuk OTC
+
+            items.push({
+            // ID & label yang penting untuk PDF
+            category_id, category_name,
+            product_id,  product_name,
+            otc_category, otc_price,
+
+            // nilai dasar
+            price, duration, qty: 1,
+
+            // PPN (dua format agar fleksibel di server/Blade)
+            ppn_rate_pct: ppnRatePct,       // 11 atau 12
+            ppn_rate_dec: ppnRateDec,       // 0.11 atau 0.12
+
+            // nilai hitungan yang tampil di UI
+            price_with_ppn,
+            price_duration,
+            final_price_no_ppn,
+            final_price
             });
+        });
 
-            // Buat form dinamis POST
-            const form = document.createElement('form');
-            form.method = 'POST';
-            form.action = url;
-            form.target = '_blank';
+        // POST dinamis (multipart form sederhana)
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = url;
+        form.target = '_blank';
 
-            // CSRF
-            const csrf = document.querySelector('meta[name="csrf-token"]').content;
-            const inputCsrf = document.createElement('input');
-            inputCsrf.type = 'hidden';
-            inputCsrf.name = '_token';
-            inputCsrf.value = csrf;
-            form.appendChild(inputCsrf);
+        // CSRF
+        const csrf = document.querySelector('meta[name="csrf-token"]').content;
+        const inputCsrf = document.createElement('input');
+        inputCsrf.type = 'hidden';
+        inputCsrf.name = '_token';
+        inputCsrf.value = csrf;
+        form.appendChild(inputCsrf);
 
-            // Title
-            const inputTitle = document.createElement('input');
-            inputTitle.type = 'hidden';
-            inputTitle.name = 'calculationTitle';
-            inputTitle.value = title;
-            form.appendChild(inputTitle);
+        // Title
+        const inputTitle = document.createElement('input');
+        inputTitle.type = 'hidden';
+        inputTitle.name = 'calculationTitle';
+        inputTitle.value = title;
+        form.appendChild(inputTitle);
 
-            // Items
-            const inputItems = document.createElement('input');
-            inputItems.type = 'hidden';
-            inputItems.name = 'items';
-            inputItems.value = JSON.stringify(items);
-            form.appendChild(inputItems);
+        // Items (JSON)
+        const inputItems = document.createElement('input');
+        inputItems.type = 'hidden';
+        inputItems.name = 'items';
+        inputItems.value = JSON.stringify(items);
+        form.appendChild(inputItems);
 
-            document.body.appendChild(form);
-            form.submit();
-            form.remove();
+        document.body.appendChild(form);
+        form.submit();
+        form.remove();
         });
 
     // Init baris pertama

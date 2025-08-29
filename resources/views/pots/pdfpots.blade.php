@@ -108,6 +108,7 @@
                 <th style="width: 5mm;">Price (Rp)</th>
                 <th style="width: 5mm;">OTC (Rp)</th>
                 <th style="width: 5mm;">Duration (Bulan)</th>
+                <th style="width: 5mm;">Nomimal PPN (%)</th>
                 <th style="width: 15mm;">Price + PPN (Rp)</th>
                 <th style="width: 12mm;">Price + Duration (Rp)</th>
                 <th style="width: 12mm;">Final Price no PPN (Rp)</th>
@@ -116,52 +117,30 @@
         </thead>
         <tbody>
                 @php
-                    $grandTotal = 0;
                     $rupiah = fn($v) => number_format((float)$v, 0, ',', '.');
                 @endphp
 
-                @forelse($items as $i => $row)
-                    @php
-                    $ppnRate = isset($row['ppn_rate']) ? ((float)$row['ppn_rate'] / 100) : 0.11;
-
-                        $category = $row['category_name'] ?? '-';
-                        $product  = $row['product_name'] ?? '-';
-                        $schema   = $row['otc_category'] ?? '-';
-                        $duration = (int) ($row['duration'] ?? 1);
-                        $price    = (float) ($row['price'] ?? 0);
-                        $otc      = (float) ($row['otc_price'] ?? 0);
-
-                        $priceWithPPN   = $price * (1 + $ppnRate);
-                        $priceDuration  = $priceWithPPN * $duration;
-                        $finalNoPPN     = ($price * $duration) + $otc;
-                        $finalWithPPN   = ($price * (1 + $ppnRate) * $duration) + ($otc * (1 + $ppnRate));
-
-
-                        $grandTotal += $finalWithPPN;
-                    @endphp
+                @foreach($items as $i => $row)
                     <tr>
-                        <td>{{ $i + 1 }}</td>
-                        <td>{{ $category }}</td>
-                        <td class="text-left">{{ $product }}</td>
-                        <td>{{ $schema }}</td>
-                        <td class="text-right">{{ $rupiah($price) }}</td>
-                        <td class="text-right">{{ $rupiah($otc) }}</td>
-                        <td>{{ $duration }}</td>
-                        <td class="text-right">{{ $rupiah($priceWithPPN) }}</td>
-                        <td class="text-right">{{ $rupiah($priceDuration) }}</td>
-                        <td class="text-right">{{ $rupiah($finalNoPPN) }}</td>
-                        <td class="text-right">{{ $rupiah($finalWithPPN) }}</td>
+                        <td>{{ $i+1 }}</td>
+                        <td>{{ $row['category_name'] }}</td>
+                        <td class="text-left">{{ $row['product_name'] }}</td>
+                        <td>{{ $row['otc_category'] }}</td>
+                        <td class="text-right">{{ $rupiah($row['price']) }}</td>
+                        <td class="text-right">{{ $rupiah($row['otc_price']) }}</td>
+                        <td>{{ (int)$row['duration'] }}</td>
+                        <td>{{ (int)$row['ppn_rate_pct'] }}%</td>
+                        <td class="text-right">{{ $rupiah($row['price_with_ppn']) }}</td>
+                        <td class="text-right">{{ $rupiah($row['price_duration']) }}</td>
+                        <td class="text-right">{{ $rupiah($row['final_price_no_ppn']) }}</td>
+                        <td class="text-right">{{ $rupiah($row['final_price']) }}</td>
                     </tr>
-                @empty
-                    <tr>
-                        <td colspan="11" class="text-left">Tidak ada item.</td>
-                    </tr>
-                @endforelse
+                @endforeach
             </tbody>
         </table>
 
     <div class="grand-total-box">
-        GRAND TOTAL: Rp {{ $rupiah($grandTotal) }}
+        GRAND TOTAL: Rp {{ $rupiah($grand_total ?? 0) }}
     </div>
 
     <div class="footer">

@@ -30,8 +30,6 @@ class NonpotsController extends Controller
     $title   = $data['title'] ?? 'Quotation';
     $inItems = $data['items'] ?? [];
 
-
-
     // Ambil nama kategori & produk dari DB untuk dipetakan
     
     $prodMap = \App\Models\Product ::pluck('nama_product',  'id')->toArray();
@@ -52,6 +50,7 @@ class NonpotsController extends Controller
             'otc_category'  => $it['otc_category'] ?? ($it['skema'] ?? ''),
             'otc_price'     => (float) ($it['otc_price'] ?? ($it['otc'] ?? 0)),
             'otc_discount'  => (float) ($it['otc_discount'] ?? ($it['disc_otc'] ?? 0)),
+            'ppn_rate'      => isset($it['ppn_rate']) ? (int)$it['ppn_rate'] : null,
         ];
     }
 
